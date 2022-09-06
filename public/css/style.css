@@ -1,0 +1,7 @@
+/* owner login page start */
+.login-page{
+    height: 100vh;
+}
+.login-page .row{
+    height: inherit;
+}
