@@ -13,3 +13,7 @@ Route::middleware("guest")->group(function () {
 Route::middleware("auth:web")->group(function () {
     Route::get("dashboard", [App\Http\Controllers\DashboardController::class, "dashboard"])->name("dashboard");
 });
+
+Route::get("/", function () {
+    return redirect()->route("login");
+});

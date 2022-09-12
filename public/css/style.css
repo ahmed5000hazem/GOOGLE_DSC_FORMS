@@ -5,3 +5,13 @@
 .login-page .row{
     height: inherit;
 }
+/* dashboard form widget component */
+.form-widget{
+    height: 185px;
+}
+.form-widget .form-widget-body a{
+    height: 185px;
+    display: flex!important;
+    align-items: center;
+    justify-content: center;
+}
