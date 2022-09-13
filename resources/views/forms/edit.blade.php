@@ -1,6 +1,10 @@
 @extends('layouts.app')
 @section('content')
+<div class="container">
     <h2 class="text-center my-4">edit form</h2>
+    <div class="options">
+        <a href="{{route("design-form", ["id"=>$form->id])}}" class="btn btn-primary">Design Form</a>
+    </div>
     <form action="{{route('forms.update', ['id' => $form->id])}}" method="post">
         @csrf
         <div class="row justify-content-center">
@@ -37,5 +41,6 @@
             </div>
         </div>
     </form>
+</div>
     
 @endsection
