@@ -15,7 +15,10 @@ class QuestionsController extends Controller
     
     public function add_questions(Request $request, $id)
     {
-        $questions_number = $request->query("questions_number")? $request->query("questions_number") : 0;
+        if ($request->query("questions_number"))
+            $questions_number = $request->query("questions_number");
+        else 
+            return redirect()->back();
         $question_types = collect(QuestionEnum::cases());
         return view("questions.add-questions", [
             "questions_number" => $questions_number,
@@ -24,7 +27,7 @@ class QuestionsController extends Controller
         ]);
     }
 
-    public function saveQuestions(Request $request)
+    public function save_questions(Request $request)
     {
         dd($request);
     }

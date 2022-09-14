@@ -38,7 +38,7 @@
 
                 question_group.querySelector(".question-input-options").classList.remove("d-none")
                 let clone = question_group.querySelector(".main-opt").cloneNode(true)
-                clone = finalizeClonedInput(clone)
+                clone = finalizeClonedInput(clone, dataParent.replace("question_", ""))
                 question_group.querySelector(".options").append(clone)
             } else {
                 question_group.querySelector(".question-input-options").classList.add("d-none")
@@ -55,17 +55,17 @@
             var dataParent = this.getAttribute("data-parent")
             var question_group = document.getElementById(dataParent)
             let clone = question_group.querySelector(".main-opt").cloneNode(true)
-            clone = finalizeClonedInput(clone)
+            clone = finalizeClonedInput(clone, dataParent.replace("question_", ""))
             question_group.querySelector(".options").append(clone)
         }
     })
-    function finalizeClonedInput(clone) {
+    function finalizeClonedInput(clone, question_id_number) {
         clone.classList.remove("main-opt", "d-none")
         clone.classList.add("opt", "m-2")
         var cloneInput = clone.querySelector("input")
         cloneInput.removeAttribute("hidden")
         cloneInput.setAttribute("placeholder", "enter opt val")
-        cloneInput.setAttribute("name", "values[][options][]")
+        cloneInput.setAttribute("name", `values[${question_id_number}][options][]`)
         cloneInput.focus()
         return clone
     }
