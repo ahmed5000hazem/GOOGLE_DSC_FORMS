@@ -29,6 +29,33 @@ class QuestionsController extends Controller
 
     public function save_questions(Request $request)
     {
-        dd($request);
+        $values = $this->remove_nulls($request->values);
+        dd($values);
+    }
+
+    private function remove_nulls($values)
+    {
+        $new_values = [];
+        foreach ($values as $inputs){
+            if (!$inputs) continue;
+            $new_val = [];
+            $err = 0;
+            foreach ($inputs as $key => $data) {
+                if ($data == null && $key != "question_type") {$err = 1;}
+                $new_val[$key] = $data;
+                if ($key == "options"){
+                    $options = [];
+                    foreach ($data as $option) {
+                        if ($option){
+                            $options[] = $option;
+                        }
+                    }
+                    $new_val["options"] = $options;
+                }
+            }
+            if (!$err)
+            $new_values[] = $new_val;
+        }
+        return $new_values;
     }
 }
