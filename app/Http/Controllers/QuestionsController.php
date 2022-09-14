@@ -15,11 +15,17 @@ class QuestionsController extends Controller
     
     public function add_questions(Request $request, $id)
     {
+        $questions_number = $request->query("questions_number")? $request->query("questions_number") : 0;
         $question_types = collect(QuestionEnum::cases());
         return view("questions.add-questions", [
-            "questions_number" => $request->query("questions_number"),
+            "questions_number" => $questions_number,
             "form" => Form::find($id),
             "question_types" => $question_types
         ]);
+    }
+
+    public function saveQuestions(Request $request)
+    {
+        dd($request);
     }
 }

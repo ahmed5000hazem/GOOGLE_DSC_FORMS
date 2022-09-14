@@ -1,1 +1,1 @@
-<button type="{{$type??'submit'}}" class="btn btn-{{$btn??'primary'}} mt-3 {{$classes??''}}" type="submit">{{$text??'submit'}}</button>
+<button type="{{$type??'submit'}}" {{$attributes??''}} class="btn btn-{{$btn??'primary'}} mt-3 {{$classes??''}}" type="submit">{{$text??'submit'}}</button>
