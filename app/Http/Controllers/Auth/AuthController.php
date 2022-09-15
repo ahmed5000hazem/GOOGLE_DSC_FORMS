@@ -20,8 +20,7 @@ class AuthController extends Controller
             "email" => "required|exists:users,email",
             "password" => "required",
         ]);
-        
-        if (Auth::attempt($request->only("email", "password"))){
+        if (Auth::attempt($request->only("email", "password"), $request->remember_me? true: false)){
             return redirect()->route("dashboard");
         }
         

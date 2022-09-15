@@ -5,8 +5,17 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Form;
 use App\Modules\EnumManager\QuestionEnum;
+
+use App\Modules\Kernel\BussinessLogic\DesignFormBussinessLogic;
+
 class QuestionsController extends Controller
 {
+    private $DesignFormBussinessLogic;
+    
+    public function __construct(DesignFormBussinessLogic $DesignFormBussinessLogic) {
+        $this->DesignFormBussinessLogic = $DesignFormBussinessLogic;
+    }
+
     public function design_form($id)
     {
         $form = Form::find($id);
@@ -29,33 +38,11 @@ class QuestionsController extends Controller
 
     public function save_questions(Request $request)
     {
-        $values = $this->remove_nulls($request->values);
-        dd($values);
-    }
-
-    private function remove_nulls($values)
-    {
-        $new_values = [];
-        foreach ($values as $inputs){
-            if (!$inputs) continue;
-            $new_val = [];
-            $err = 0;
-            foreach ($inputs as $key => $data) {
-                if ($data == null && $key != "question_type") {$err = 1;}
-                $new_val[$key] = $data;
-                if ($key == "options"){
-                    $options = [];
-                    foreach ($data as $option) {
-                        if ($option){
-                            $options[] = $option;
-                        }
-                    }
-                    $new_val["options"] = $options;
-                }
-            }
-            if (!$err)
-            $new_values[] = $new_val;
+        try {
+            $values = $this->DesignFormBussinessLogic->validate_format_questions($request->values);
+            $this->DesignFormBussinessLogic->save_question_data();
+        } catch (\Throwable $e) {
+            return redirect()->route("dashboard")->with("errors", "invalid request format");
         }
-        return $new_values;
     }
 }
