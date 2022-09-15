@@ -38,11 +38,14 @@ class QuestionsController extends Controller
 
     public function save_questions(Request $request)
     {
+        $values = $this->DesignFormBussinessLogic->validate_format_questions($request->values);
         try {
-            $values = $this->DesignFormBussinessLogic->validate_format_questions($request->values);
-            $this->DesignFormBussinessLogic->save_question_data();
+            if ($values) $this->DesignFormBussinessLogic->save_question_data($values);
+            else return redirect()->route("design-form", ["id"=>$values["questions"][0]["form_id"]]);
+            
+            return redirect()->route("design-form", ["id"=>$values["questions"][0]["form_id"]]);
         } catch (\Throwable $e) {
-            return redirect()->route("dashboard")->with("errors", "invalid request format");
+            return redirect()->route("dashboard")->with("errors", "invalid question format");
         }
     }
 }

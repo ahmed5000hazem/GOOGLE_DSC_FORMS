@@ -17,8 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string("question_text");
             $table->tinyInteger("question_type");
-            $table->foreignId("form_id")->constrained();
-            $table->timestamps();
+            $table->foreignId("form_id")->constrained()->onDelete("cascade")->onUpdate("cascade");
+            $table->timestamp("created_at")->useCurrent();
+            $table->timestamp("updated_at")->useCurrent();
         });
     }
 

@@ -17,7 +17,8 @@ return new class extends Migration
             $table->id();
             $table->string("image_url");
             $table->foreignId("question_id")->constrained();
-            $table->timestamps();
+            $table->timestamp("created_at")->useCurrent();
+            $table->timestamp("updated_at")->useCurrent();
         });
     }
 

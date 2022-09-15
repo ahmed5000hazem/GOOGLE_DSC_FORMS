@@ -2,7 +2,6 @@
 namespace App\Modules\Kernel\BussinessLogic;
 use Illuminate\Support\Facades\DB;
 use App\Models\Question;
-use App\Models\Option;
 class DesignFormBussinessLogic
 {
     public function validate_format_questions($values)
@@ -20,7 +19,7 @@ class DesignFormBussinessLogic
                     $options = [];
                     foreach ($data as $option) {
                         if ($option){
-                            $options_array[] = ["option_text" => $option, "question_id" => $index];
+                            $options_array[] = ["option_text" => $option, "question_index" => $index];
                         }
                     }
                 } else {
@@ -30,14 +29,23 @@ class DesignFormBussinessLogic
             if (!$err)
             $new_values[] = $new_val;
         }
-        return ["questions" => $new_values, "questions_options" => $options_array];
+        $grouped = collect($options_array)->groupBy("question_index");
+        return ["questions" => $new_values, "questions_options" => $grouped->all()];
     }
     public function save_question_data($values)
     {
-        // dd($values);
         DB::transaction(function () use ($values) {
-            Question::insert($values["questions"]);
-            Option::insert($values["questions_options"]);
+            foreach ($values["questions"] as $key => $value) {
+                $question = Question::create($value);
+                $options = $values["questions_options"][$key]->map(function ($item) {
+                    return ["option_text" => $item["option_text"]];
+                });
+                $question->options()->createMany($options->all());
+                echo $key;
+                echo "<pre>";
+                print_r($options);
+                echo "</pre>";
+            }
         });
     }
 }
