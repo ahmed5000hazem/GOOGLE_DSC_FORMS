@@ -15,6 +15,12 @@
                     @slot('value', $form->name)
                 @endcomponent
                 
+                @component('components.dynamic-form.input-date-time')
+                @slot('label', 'Expiration date')
+                @slot('name', 'expires_at')
+                @slot("date", $form->expires_at)
+                @endcomponent
+
                 @component('components.dynamic-form.text-area')
                     @slot('label', 'Edit form description')
                     @slot('name', 'description')

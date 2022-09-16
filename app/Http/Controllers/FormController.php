@@ -26,6 +26,7 @@ class FormController extends Controller
         Form::create([
             "name" => $request->name,
             "description" => $request->description,
+            "expires_at" => $request->expires_at,
             "owner_id" => auth()->user()->id,
         ]);
 

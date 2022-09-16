@@ -6,18 +6,22 @@
         <div class="row justify-content-center">
             <div class="col-8 col-lg-4">
                 @component('components.dynamic-form.input')
-                @slot('label', 'form name')
+                @slot('label', 'Form name')
                 @slot('name', 'name')
                 @endcomponent
                 
+                @component('components.dynamic-form.input-date-time')
+                @slot('label', 'Expiration date')
+                @slot('name', 'expires_at')
+                @endcomponent
+
                 @component('components.dynamic-form.text-area')
-                @slot('label', 'enter form description')
+                @slot('label', 'Form description')
                 @slot('name', 'description')
                 @endcomponent
                 
                 @component('components.dynamic-form.btn')@endcomponent
             </div>
-
         </div>
     </form>
 @endsection

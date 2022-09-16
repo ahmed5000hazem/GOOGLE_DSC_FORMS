@@ -10,7 +10,7 @@ use App\Models\Question;
 class Form extends Model
 {
     use HasFactory;
-    protected $fillable = ["name", "owner_id", "description"];
+    protected $fillable = ["name", "owner_id", "description", "expires_at"];
 
     public function questions()
     {
