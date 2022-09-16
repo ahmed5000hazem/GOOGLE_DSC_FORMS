@@ -17,7 +17,7 @@ return new class extends Migration
             $table->id();
             $table->string("name");
             $table->foreignId("owner_id")->constrained("users");
-            $table->text("description");
+            $table->text("description")->nullable();
             $table->timestamp("created_at")->useCurrent();
             $table->timestamp("updated_at")->useCurrent();
         });

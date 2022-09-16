@@ -1,7 +1,11 @@
 <?php
 namespace App\Modules\Kernel\BussinessLogic;
+
+use App\Models\Option;
 use Illuminate\Support\Facades\DB;
 use App\Models\Question;
+use Illuminate\Support\Facades\Validator;
+
 class DesignFormBussinessLogic
 {
     public function validate_format_questions($values)
@@ -37,14 +41,55 @@ class DesignFormBussinessLogic
         DB::transaction(function () use ($values) {
             foreach ($values["questions"] as $key => $value) {
                 $question = Question::create($value);
-                $options = $values["questions_options"][$key]->map(function ($item) {
-                    return ["option_text" => $item["option_text"]];
-                });
-                $question->options()->createMany($options->all());
-                echo $key;
-                echo "<pre>";
-                print_r($options);
-                echo "</pre>";
+                if (isset($values["questions_options"][$key])){
+                    $options = $values["questions_options"][$key]->map(function ($item) {
+                        return ["option_text" => $item["option_text"]];
+                    });
+                    $question->options()->createMany($options->all());
+                }
+            }
+        });
+    }
+
+    public function validate_updated_questions($request)
+    {
+        $validator = Validator::make($request->all(), [
+            "question" => "required|array",
+            "question.id" => "required",
+            "question.form_id" => "required",
+            "question.question_text" => "required",
+            "question.question_type" => "required",
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->with("errors", "invalid question format");
+        }
+    }
+
+    public function question_formatter($new_options)
+    {
+        $options = [];
+        foreach ($new_options as $new_option) {
+            if ($new_option["option_text"]){
+                $options[] = $new_option;
+            }
+        }
+        return $options;
+    }
+
+    public function update_question_data($question_id, $request)
+    {
+        $question = Question::find($question_id);
+        DB::transaction(function () use ($request, $question) {
+            $question->update($request->question);
+            if ($request->options){
+                foreach ($request->options as $option) {
+                    Option::where("id", $option["id"])->update(["option_text" => $option["option_text"]]);
+                }
+            }
+            if($request->new_options){
+                $new_options = $this->question_formatter($request->new_options);
+
+                if ($new_options) $question->options()->createMany($new_options);
             }
         });
     }

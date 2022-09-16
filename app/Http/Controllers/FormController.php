@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
+use App\Models\Option;
 use Illuminate\Http\Request;
 
 class FormController extends Controller
@@ -42,7 +43,11 @@ class FormController extends Controller
 
     public function delete($id)
     {
-        $form = Form::findOrFail($id);
+        $form = Form::where("id", $id)->with("questions:id,form_id")->first();
+        $questions = $form->questions->map(function($item){
+            return $item->id;
+        })->all();
+        Option::whereIn("question_id", $questions)->delete();
         $form->delete();
         return redirect()->route("dashboard");
     }

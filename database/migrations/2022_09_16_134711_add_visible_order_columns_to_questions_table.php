@@ -13,12 +13,9 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('option_response', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId("option_id")->constrained();
-            $table->foreignId("response_id")->constrained()->onDelete("restrict");
-            $table->timestamp("created_at")->useCurrent();
-            $table->timestamp("updated_at")->useCurrent();
+        Schema::table('questions', function (Blueprint $table) {
+            $table->integer("order")->nullable()->after("form_id");
+            $table->boolean("visible")->nullable()->default(1)->after("form_id");
         });
     }
 
@@ -29,6 +26,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('option_response');
+        Schema::table('questions', function (Blueprint $table) {
+            $table->dropColumn(["order", "visible"]);
+        });
     }
 };

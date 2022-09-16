@@ -1,9 +1,12 @@
-<div id="question_{{$id}}" class="question-qroup col-lg-6 border-bottom pb-3 mt-4">
+<div id="question_{{$id}}" class="question-qroup col-lg-8 border-bottom pb-3 mt-4">
     <div class="question-inputs d-flex justify-content-between">
         <h4>Q.{{(int) $id + 1}}</h4>
         <input type="hidden" value="{{$form_id}}" name="values[{{$id}}][form_id]">
         <div class="col-auto">
-            <input type="text" class="form-control" name="values[{{$id}}][question_text]" placeholder="question">
+            <input type="text" class="form-control" name="values[{{$id}}][question_text]" placeholder="question text">
+        </div>
+        <div class="col-auto">
+            <input type="number" class="form-control" name="values[{{$id}}][order]" value="{{$id + (int) request()->query("existent_questions") }}" placeholder="question order">
         </div>
         <div class="col-auto">
             <select class="form-select" data-parent="question_{{$id}}" name="values[{{$id}}][question_type]">
@@ -11,6 +14,12 @@
                     <option value="{{$option->value}}" {{$selected_option == $option->value? "selected" : ""}} >{{str_replace("_", " ", $option->name)}}</option>
                 @endforeach
             </select>
+        </div>
+        <div class="col-auto">
+            <div class="form-check">
+                <label class="form-check-label" for="question_visible">Hidden</label>
+                <input class="form-check-input" name="values[{{$id}}][visible]" type="checkbox" value="0" id="question_visible">
+            </div>
         </div>
     </div>
     <div class="question-input-options d-none">
