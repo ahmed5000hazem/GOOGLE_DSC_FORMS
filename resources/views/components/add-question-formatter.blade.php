@@ -21,6 +21,12 @@
                 <input class="form-check-input" name="values[{{$id}}][visible]" type="checkbox" value="0" id="question_visible">
             </div>
         </div>
+        <div class="col-auto">
+            <div class="form-check">
+                <label class="form-check-label" for="question_required">Required</label>
+                <input class="form-check-input" name="values[{{$id}}][required]" type="checkbox" checked value="1" id="question_required">
+            </div>
+        </div>
     </div>
     <div class="question-input-options d-none">
         <h3 class="mt-3 text-center text-muted" style="font-size:14px">options</h3>

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Question extends Model
 {
     use HasFactory, SoftDeletes;
-    public $fillable = ["form_id", "question_text", "question_type", "visible", "order"];
+    public $fillable = ["form_id", "question_text", "question_type", "visible", "required", "order"];
 
     public function options()
     {

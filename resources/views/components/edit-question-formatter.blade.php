@@ -19,7 +19,13 @@
         <div class="col-auto">
             <div class="form-check">
                 <label class="form-check-label" for="question_visible">Hidden</label>
-                <input class="form-check-input" name="question[visible]" type="checkbox" value="0" id="question_visible">
+                <input class="form-check-input" name="question[visible]" {{$question->visible?"":"checked"}} type="checkbox" value="0" id="question_visible">
+            </div>
+        </div>
+        <div class="col-auto">
+            <div class="form-check">
+                <label class="form-check-label" for="question_required">Optional</label>
+                <input class="form-check-input" name="question[required]" {{$question->required?"":"checked"}} type="checkbox" value="0" id="question_required">
             </div>
         </div>
     </div>

@@ -60,6 +60,7 @@
                         <th scope="col">ID</th>
                         <th scope="col">Question</th>
                         <th scope="col">Type</th>
+                        <th scope="col">Required</th>
                         <th scope="col">Options</th>
                         <th scope="col">Handle</th>
                     </tr>
@@ -71,6 +72,11 @@
                             <th> {{$question->id}} </th>
                             <td> {{$question->question_text}} </td>
                             <td> {{str_replace("_", " ", $question_types[$question->question_type]->name)}} </td>
+                            @if ($question->required)
+                                <td class="text-warning fw-bold"> Required </td>
+                            @else
+                                <td class="text-success"> optional </td>
+                            @endif
                             <td>
                                 <ul class="">
                                     @forelse  ($question->options as $option)
@@ -78,7 +84,7 @@
                                             <li style="font-size: 14px">{{$option->option_text}}</li>
                                         @endif
                                     @empty
-                                        <p class="text-success"> no options for this question </p>
+                                        <p class="text-info"> no options for this question </p>
                                     @endforelse 
                                 </ul>
                             </td>
