@@ -18,3 +18,5 @@ Route::post("/delete/{id}", [FormController::class, "delete"])->name("forms.dele
 Route::get('design-form/{id}', [QuestionsController::class, "design_form"])->name("design-form");
 
 Route::get('{id}/add-questions', [QuestionsController::class, "add_questions"])->name("add-questions");
+
+Route::get("{id}", [FormController::class, "get_form"])->name("get_form");
