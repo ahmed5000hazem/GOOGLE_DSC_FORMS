@@ -6,7 +6,7 @@
                 @slot('name', str_replace(" ", "_", $question->question_text))
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
-                @slot("attributes", "required")
+                @slot("attributes", $question->required?"required":"")
             @endcomponent
         @elseif($question->question_type == 1)
             @component('components.dynamic-form.text-area')
@@ -14,7 +14,7 @@
                 @slot('name', str_replace(" ", "_", $question->question_text))
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
-                @slot("attributes", "required")
+                @slot("attributes", $question->required?"required":"")
             @endcomponent
         @elseif($question->question_type == 2)
             @component('components.dynamic-form.checkbox')
@@ -23,7 +23,7 @@
                 @slot('name', str_replace(" ", "_", $question->question_text))
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
-                @slot("attributes", "required")
+                @slot("attributes", $question->required?"required":"")
             @endcomponent
         @elseif($question->question_type == 3)
             @component('components.dynamic-form.radio')
@@ -32,7 +32,23 @@
                 @slot('name', str_replace(" ", "_", $question->question_text))
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
-                @slot("attributes", "required")
+                @slot("attributes", $question->required?"required":"")
+            @endcomponent
+        @elseif($question->question_type == 4)
+            @component('components.dynamic-form.email')
+                @slot('label', $question->question_text)
+                @slot('name', str_replace(" ", "_", $question->question_text))
+                @slot('placeholder', "")
+                @slot('label_classes', "fs-4")
+                @slot("attributes", $question->required?"required":"")
+            @endcomponent
+        @elseif($question->question_type == 5)
+            @component('components.dynamic-form.number')
+                @slot('label', $question->question_text)
+                @slot('name', str_replace(" ", "_", $question->question_text))
+                @slot('placeholder', "")
+                @slot('label_classes', "fs-4")
+                @slot("attributes", $question->required?"required":"")
             @endcomponent
         @endif
     </div>
