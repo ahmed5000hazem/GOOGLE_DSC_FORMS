@@ -36,9 +36,13 @@
                     <button class="btn btn-danger">Trash All</button>
                 </form>
             </div>
-            <div class="col-4 col-lg-3">
+            <div class="col-4 col-lg-2">
                 <button class="btn btn-info">Responses</button>
             </div>
+            <div class="col-4 col-lg-2">
+                <a href="{{route("get_form", ["id" => $form->id])}}" class="btn btn-success">Preview</a>
+            </div>
+            
         @endif
     </div>
     <hr>

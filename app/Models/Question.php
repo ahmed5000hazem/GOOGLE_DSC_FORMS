@@ -21,4 +21,14 @@ class Question extends Model
     {
         return $this->belongsTo(Form::class);
     }
+
+    public function scopeVisible($query)
+    {
+        $query->where('visible', 1);
+    }
+    
+    public function scopeHidden($query)
+    {
+        $query->where('visible', 0);
+    }
 }

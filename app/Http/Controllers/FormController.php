@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Form;
 use App\Models\Option;
+use App\Models\Question;
 use Illuminate\Http\Request;
 
 class FormController extends Controller
@@ -40,6 +41,13 @@ class FormController extends Controller
         $form->update($request->only("name", "description"));
         
         return redirect()->route("dashboard");
+    }
+
+    public function get_form($id)
+    {
+        $form = Form::findOrFail($id);
+        $questions = Question::where("form_id", $id)->visible()->with("options")->orderBy("order");
+        return view("make-response", ["form" => $form, "questions" => $questions->get()]);
     }
 
     public function delete($id)
