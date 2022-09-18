@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Form;
+use App\Models\Response;
 use Illuminate\Http\Request;
 use App\Modules\Kernel\BussinessLogic\ResponseBussinessLogic;
 
@@ -13,6 +14,16 @@ class ResponseController extends Controller
     public function __construct(ResponseBussinessLogic $responseBussinessLogic)
     {
         $this->responseBussinessLogic = $responseBussinessLogic;
+    }
+
+    public function get_responses($id){
+        $form = Form::where("id", $id)->with("questions")->first();
+        $questions = $form->questions->map(function ($item) {
+            return $item->id;
+        });
+        $responses = Response::whereIn("question_id", $questions)->with("options")->get();
+        
+        return view("get-responses", compact("form", "responses"));
     }
 
     public function save_response(Request $request, $id)
