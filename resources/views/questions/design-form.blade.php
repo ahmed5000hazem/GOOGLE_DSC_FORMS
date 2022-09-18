@@ -81,14 +81,14 @@
                             @else
                                 <td class="text-success"> optional </td>
                             @endif
-                            <td>
-                                <ul class="">
+                            <td style="width:250px">
+                                <ul style="max-width:200px">
                                     @forelse  ($question->options as $option)
                                         @if ($option->option_text)
-                                            <li style="font-size: 14px">{{$option->option_text}}</li>
+                                            <li style="font-size: 14px; max-width:170px">{{$option->option_text}}</li>
                                         @endif
                                     @empty
-                                        <p class="text-info"> no options for this question </p>
+                                        <p class="text-info"  style="max-width:170px"> no options for this question </p>
                                     @endforelse 
                                 </ul>
                             </td>

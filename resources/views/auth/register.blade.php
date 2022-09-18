@@ -11,25 +11,25 @@
                         </div>
                     @endforeach
                 @endif
-                <h2 class="mb-3 text-center text-primary fw-bold">Login DSC Forms</h2>
+                <h2 class="mb-3 text-center text-primary fw-bold">Register DSC Forms</h2>
                 <div class="my-3">
                     <strong>
-                        Be A Member <a href="{{route("register_form")}}" class="text-decoration-none text-warning ">Register</a>
+                        Have An Account ? <a href="{{route("login_form")}}" class="text-decoration-none text-warning "> Login Instead.</a>
                     </strong>
                 </div>
-                <form action="{{route("login")}}" method="POST">
+                <form action="{{route("register")}}" method="POST">
                     @csrf
                     <div class="mb-3">
                         <label for="login_input" class="form-label">Email address</label>
-                        <input type="email" class="form-control" id="login_input" name="email" aria-describedby="emailHelp">
+                        <input type="email" class="form-control" id="login_input" name="email" value="{{old("email")}}" aria-describedby="emailHelp">
                     </div>
                     <div class="mb-3">
-                        <label for="login_password" class="form-label">Password</label>
-                        <input type="password" class="form-control" name="password" id="login_password">
+                        <label for="reg_password" class="form-label">Password</label>
+                        <input type="password" class="form-control" name="password" id="reg_password">
                     </div>
-                    <div class="mb-3 form-check">
-                        <input type="checkbox" class="form-check-input" name="remember_me" id="remember">
-                        <label class="form-check-label" for="remember">Remember Me</label>
+                    <div class="mb-3">
+                        <label for="reg_password_confirm" class="form-label">Password Confirmation</label>
+                        <input type="password" class="form-control" name="password_confirmation" id="reg_password_confirm">
                     </div>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </form>

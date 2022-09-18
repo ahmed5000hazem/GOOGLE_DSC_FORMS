@@ -15,8 +15,8 @@ return new class extends Migration
     {
         Schema::create('option_response', function (Blueprint $table) {
             $table->id();
-            $table->foreignId("option_id")->constrained();
-            $table->foreignId("response_id")->constrained()->onDelete("restrict");
+            $table->foreignId("option_id")->constrained()->onDelete("restrict")->onUpdate("cascade");
+            $table->foreignId("response_id")->constrained()->onDelete("restrict")->onUpdate("cascade");
             $table->timestamp("created_at")->useCurrent();
             $table->timestamp("updated_at")->useCurrent();
         });

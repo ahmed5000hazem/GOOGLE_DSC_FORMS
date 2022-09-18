@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class Response extends Model
 {
     use HasFactory;
+    public $fillable = ["question_id", "response_text"];
 }

@@ -1,4 +1,4 @@
-<div id="question_{{$id}}" class="question-qroup col-lg-8 border-bottom pb-3 mt-4">
+<div id="question_{{$id}}" class="question-qroup col-lg-10 border-bottom pb-3 mt-4">
     <div class="question-inputs d-flex justify-content-between">
         <h4>Q.{{(int) $id + 1}}</h4>
         <input type="hidden" value="{{$id}}" name="question[id]">
@@ -24,8 +24,12 @@
         </div>
         <div class="col-auto">
             <div class="form-check">
-                <label class="form-check-label" for="question_required">Optional</label>
-                <input class="form-check-input" name="question[required]" {{$question->required?"":"checked"}} type="checkbox" value="0" id="question_required">
+                <label class="form-check-label" for="question_required">Required</label>
+                <input class="form-check-input" name="question[required]" {{$question->required?"checked":""}} type="radio" value="1" id="question_required">
+            </div>
+            <div class="form-check">
+                <label class="form-check-label" for="question_optional">Optional</label>
+                <input class="form-check-input" name="question[required]" {{$question->required?"":"checked"}} type="radio" value="0" id="question_optional">
             </div>
         </div>
     </div>

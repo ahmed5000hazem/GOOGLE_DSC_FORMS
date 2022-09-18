@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('responses', function (Blueprint $table) {
             $table->id();
-            $table->tinyInteger("type");
+            $table->text("response_text")->nullable();
             $table->foreignId("question_id")->constrained()->onDelete("restrict")->onUpdate("cascade");
             $table->timestamp("created_at")->useCurrent();
             $table->timestamp("updated_at")->useCurrent();

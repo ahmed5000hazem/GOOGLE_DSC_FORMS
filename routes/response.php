@@ -3,4 +3,4 @@
 use App\Http\Controllers\ResponseController;
 use Illuminate\Support\Facades\Route;
 
-Route::post("save-response/{id}", [ResponseController::class, "save_response"])->name("save-response");
+Route::middleware("auth", "role:owner", "role:normal-user")->post("save-response/{id}", [ResponseController::class, "save_response"])->name("save-response");

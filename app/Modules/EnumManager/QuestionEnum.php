@@ -7,6 +7,6 @@ enum QuestionEnum:int {
     case Long_text = 1;
     case Checkbox = 2;
     case Radio_button = 3;
-    case email = 4;
-    case numeric = 5;
+    case Email = 4;
+    case Numeric = 5;
 }
