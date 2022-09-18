@@ -17,15 +17,19 @@ class ResponseController extends Controller
 
     public function save_response(Request $request, $id)
     {
-        $form = Form::find($id);
-        if (($form->expires_at && strtotime($form->expires_at) < time())) return view("get-form-error", ["message" => "Form Expired."]);
+        $validity = $this->responseBussinessLogic->check_form_availability($id);
+
+        if ($validity["error"]??false) 
+            return view("get-form-error", $validity);
+        
+
         $err = $this->responseBussinessLogic->validateResponse($request, $id);
         if($err) return redirect()->route("get_form", ["id"=>$id])->with("reponse", $request->response);
         try {
-            $this->responseBussinessLogic->saveResponse($request);
+            $this->responseBussinessLogic->saveResponse($request, $id);
             return redirect()->route("get_form", ["id"=>$id]);
         } catch (\Throwable $th) {
-            return view("get-form-error", ["message" => "Something went wrong try again."]);
+            return view("get-form-error", ["message" => "Something went wrong please try again."]);
         }
         
     }

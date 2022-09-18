@@ -47,7 +47,7 @@
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
                 @slot("attributes", $question->required?"required":"")
-                @slot('value', session("reponse")[$question->id]["response_text"]??"")
+                @slot('value', session("reponse")[$question->id]["response_text"]??auth()->user()->email)
             @endcomponent
         @elseif($question->question_type == $types::Numeric->value)
             @component('components.dynamic-form.number')

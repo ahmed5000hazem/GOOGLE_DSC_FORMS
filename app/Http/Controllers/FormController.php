@@ -7,11 +7,17 @@ use App\Models\Option;
 use App\Models\Question;
 use App\Models\Response;
 use App\Modules\EnumManager\QuestionEnum;
+use App\Modules\Kernel\BussinessLogic\ResponseBussinessLogic;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class FormController extends Controller
 {
+    public $responseBussinessLogic;
+    public function __construct(ResponseBussinessLogic $responseBussinessLogic)
+    {
+        $this->responseBussinessLogic = $responseBussinessLogic;
+    }
 
     public function edit($id)
     {
@@ -48,6 +54,11 @@ class FormController extends Controller
 
     public function get_form($id)
     {
+        $validity = $this->responseBussinessLogic->check_form_availability($id);
+
+        if ($validity["error"]??false) 
+            return view("get-form-error", $validity);
+
         $form = Form::findOrFail($id);
         $colors = [
             "success",

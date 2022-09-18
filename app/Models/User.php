@@ -51,4 +51,9 @@ class User extends Authenticatable
         return $this->role == "user"? true : false;
     }
 
+    public function UserResponses()
+    {
+        return $this->belongsToMany(Response::class, "response_user", "user_id", "form_id");
+    }
+
 }

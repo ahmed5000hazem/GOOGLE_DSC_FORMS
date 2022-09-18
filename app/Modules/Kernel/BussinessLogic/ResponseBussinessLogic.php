@@ -1,6 +1,7 @@
 <?php
 namespace App\Modules\Kernel\BussinessLogic;
 
+use App\Models\Form;
 use App\Models\Response;
 use App\Modules\EnumManager\QuestionEnum;
 use Illuminate\Support\Facades\DB;
@@ -32,23 +33,35 @@ class ResponseBussinessLogic
         return $errors;
     }
 
-    public function saveResponse($request)
+    public function saveResponse($request, $form_id)
     {
         $responses = $request->response;
-        DB::transaction(function () use($responses, $request) {
+        DB::transaction(function () use($responses, $request, $form_id) {
             foreach ($responses as $key => $response) {
                 $value = collect($response)->forget(["question_type", "validation"])->all();
-    
-                $response = Response::create($value);
+                $form_response = Response::create($value);
                 if ($response["question_type"] == QuestionEnum::Checkbox->value) {
                     if (isset($request->options[$key])) {
-                        $options = collect($request->options[$key])->map(function ($item) use ($response) {
-                            return ["response_id" => 5, "option_id" => $item];
+                        $options = collect($request->options[$key])->map(function ($item) use ($form_response) {
+                            return ["response_id" => $form_response->id, "option_id" => $item];
                         })->all();
                         DB::table("option_response")->insert($options);
                     }
                 }
             }
+            $user = auth()->user();
+            DB::table("response_user")->insert(["user_id" => $user->id, "form_id" => $form_id]);
         });
     }
+
+    public function check_form_availability($form_id)
+    {
+        $response = DB::table("response_user")->select("user_id")->where("user_id", auth()->user()->id)->where("form_id", $form_id)->get();
+        if ($response->isNotEmpty()) return ["error" => true, "message" => "You have submited your response"];
+
+        $form = Form::find($form_id);
+        if (($form->expires_at && strtotime($form->expires_at) < time())) return ["error" => true, "message" => "Form Expired."];
+
+    }
+
 }
