@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Form;
 use App\Models\Response;
+use App\Models\Question;
 use Illuminate\Http\Request;
 use App\Modules\Kernel\BussinessLogic\ResponseBussinessLogic;
 
@@ -17,13 +18,14 @@ class ResponseController extends Controller
     }
 
     public function get_responses($id){
-        $form = Form::where("id", $id)->with("questions")->first();
-        $questions = $form->questions->map(function ($item) {
+        $form = Form::where("id", $id)->first();
+        $questions = Question::where("form_id", $form->id)->orderBy("id")->withTrashed()->get();
+        $questions_ids = $questions->map(function ($item) {
             return $item->id;
         });
-        $responses = Response::whereIn("question_id", $questions)->with("options")->get();
-        
-        return view("get-responses", compact("form", "responses"));
+        $responses = Response::whereIn("question_id", $questions_ids)->with("options")->get();
+        $responses_collection = $responses->sortBy("question_id")->groupBy("user_id");
+        return view("get-responses", compact("form", "responses", "questions"));
     }
 
     public function save_response(Request $request, $id)

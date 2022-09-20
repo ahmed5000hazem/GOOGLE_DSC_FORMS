@@ -67,7 +67,7 @@ class FormController extends Controller
             "warning",
         ];
         $question_types = QuestionEnum::class;
-        $questions = Question::where("form_id", $id)->visible()->with("options")->orderBy("order");
+        $questions = Question::where("form_id", $id)->with("options")->orderBy("order");
         session(["form_id" => $form->id]);
         return view("make-response", ["form" => $form, "questions" => $questions->get(), "colors" => $colors, "types" => $question_types]);
     }

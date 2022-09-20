@@ -21,6 +21,7 @@ class ResponseBussinessLogic
                 continue;
             }
             $validator = Validator::make($response, [
+                "user_id" => "required",
                 "question_type" => "required",
                 "question_id" => "required",
                 "response_text" => "".$response["validation"],
