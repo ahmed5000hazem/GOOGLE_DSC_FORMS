@@ -85,7 +85,7 @@ class QuestionsController extends Controller
     public function toggle_visibilty($id, Request $request)
     {
         $question = Question::findOrFail($id);
-        $question->update(["visible" => $request->visible]);
+        $question->update(["visible" => $request->visible, "required" => false]);
         return redirect()->back();
     }
 
