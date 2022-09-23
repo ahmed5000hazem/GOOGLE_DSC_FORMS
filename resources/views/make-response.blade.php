@@ -14,6 +14,7 @@
                 @slot('question', $question)
                 @slot("border_color", $colors[($loop->index) % 4])
                 @slot("types", $types)
+                @slot("form", $form)
             @endcomponent
         @empty
             <div class="alert alert-warning">No Questions Yet</div>

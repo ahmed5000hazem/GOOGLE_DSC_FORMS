@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 use App\Models\Question;
+use App\Scopes\UserFormScope;
 
 class Form extends Model
 {
@@ -15,5 +16,10 @@ class Form extends Model
     public function questions()
     {
         return $this->hasMany(Question::class);
+    }
+
+    protected static function booted()
+    {
+        static::addGlobalScope(new UserFormScope);
     }
 }

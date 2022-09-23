@@ -79,8 +79,10 @@ class DesignFormBussinessLogic
     public function update_question_data($question_id, $request)
     {
         $question = Question::find($question_id);
-        DB::transaction(function () use ($request, $question) {
-            $question->update($request->question);
+        $request_question = $request->question;
+        (!$request_question["visible"])? $request_question["required"] = 0: "";
+        DB::transaction(function () use ($request, $question, $request_question) {
+            $question->update($request_question);
             if ($request->options){
                 foreach ($request->options as $option) {
                     Option::where("id", $option["id"])->update(["option_text" => $option["option_text"]]);
