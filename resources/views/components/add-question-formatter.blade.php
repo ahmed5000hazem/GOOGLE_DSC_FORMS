@@ -17,14 +17,22 @@
         </div>
         <div class="col-auto">
             <div class="form-check">
-                <label class="form-check-label" for="question_visible">Hidden</label>
-                <input class="form-check-input" name="values[{{$id}}][visible]" type="checkbox" value="0" id="question_visible">
+                <label class="form-check-label" for="question_visible">Visible</label>
+                <input class="form-check-input" name="values[{{$id}}][visible]" checked type="radio" value="1" id="question_visible">
+            </div>
+            <div class="form-check">
+                <label class="form-check-label" for="question_hidden">Hidden</label>
+                <input class="form-check-input" name="values[{{$id}}][visible]" type="radio" value="0" id="question_hidden">
             </div>
         </div>
         <div class="col-auto">
             <div class="form-check">
                 <label class="form-check-label" for="question_required">Required</label>
-                <input class="form-check-input" name="values[{{$id}}][required]" type="checkbox" checked value="1" id="question_required">
+                <input class="form-check-input" name="values[{{$id}}][required]" checked type="radio" value="1" id="question_required">
+            </div>
+            <div class="form-check">
+                <label class="form-check-label" for="question_optional">Optional</label>
+                <input class="form-check-input" name="values[{{$id}}][required]" type="radio" value="0" id="question_optional">
             </div>
         </div>
     </div>

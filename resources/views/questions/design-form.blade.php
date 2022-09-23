@@ -2,7 +2,8 @@
 @section("content")
 <div class="container">
     @if (request()->query("scope") == "trashed")
-    <h2 class="text-center mt-4 text-danger">Trash of <a href="{{route("forms.edit", ["id" => $form->id])}}">{{$form->name}}</a> form</h2>
+    {{-- trash section to be continued --}}
+    {{-- <h2 class="text-center mt-4 text-danger">Trash of <a href="{{route("forms.edit", ["id" => $form->id])}}">{{$form->name}}</a> form</h2> --}}
     @else
     <h2 class="text-center mt-4">Manage questions of <a href="{{route("forms.edit", ["id" => $form->id])}}">{{$form->name}}</a> form</h2>
     @endif
@@ -17,7 +18,8 @@
             </form>
         </div>
         @if (request()->query("scope") == "trashed")
-            <div class="col-4 col-lg-2">
+        {{-- trash section to be continued --}}
+            {{-- <div class="col-4 col-lg-2">
                 <a href="?" class="btn btn-info btn-sm">Back To Form</a>
             </div>
             <div class="col-4 col-lg-2">
@@ -25,9 +27,10 @@
                     @csrf
                     <button class="btn btn-success btn-sm">Restore All</button>
                 </form>
-            </div>
+            </div> --}}
         @else
-            <div class="col-2 col-lg-2">
+        {{-- trash section to be continued --}}
+            {{-- <div class="col-2 col-lg-2">
                 <a href="?scope=trashed" class="btn btn-warning">Go To Trash</a>
             </div>
             <div class="col-2 col-lg-2">
@@ -35,12 +38,12 @@
                     @csrf
                     <button class="btn btn-danger">Trash All</button>
                 </form>
-            </div>
+            </div> --}}
             <div class="col-4 col-lg-2">
                 <a href="{{route("get-responses", ["id" => $form->id])}}" class="btn btn-info">Responses</a>
             </div>
             <div class="col-4 col-lg-2">
-                <a href="{{route("get_form", ["id" => $form->id])}}" class="btn btn-success">Preview</a>
+                <a href="{{route("get_form", ["id" => $form->id])}}" target="_blank" class="btn btn-success">Preview</a>
             </div>
             
         @endif
@@ -50,9 +53,10 @@
         <div class="col-auto">
             <h4 class="fs-5"> Questions <span class="badge bg-primary">{{count($questions)}}</span></h4>
         </div>
-        <div class="col-auto">
+        {{-- trash section to be continued --}}
+        {{-- <div class="col-auto">
             <h4 class="fs-5"> Trashed <span class="badge bg-danger">{{$trashed_questions}}</span></h4>
-        </div>
+        </div> --}}
     </div>
     
     <div class="row">
@@ -95,22 +99,24 @@
                             <td class="clearfix">
                                 <a href="{{route("edit-question", ["id" => $question->id])}}" class="btn btn-info btn-sm me-2 float-start">Edit</a>
                                 @if (request()->query("scope") == "trashed")
-                                    <form action="{{route("restore-question", ["id" => $question->id])}}" class="float-start" method="post">
+                                {{-- trash section to be continued --}}
+                                    {{-- <form action="{{route("restore-question", ["id" => $question->id])}}" class="float-start" method="post">
                                         @csrf
                                         <button class="btn btn-success btn-sm me-2">Restore</button>
-                                    </form>
-                                    <form action="{{route("hard-delete-question", ["id" => $question->id])}}" class="float-start" method="post">
-                                        @csrf
-                                        <button class="btn btn-danger btn-sm">Hard Delete</button>
-                                    </form>
+                                    </form> --}}
                                 @else
-                                    <form action="{{route("delete-question", ["id" => $question->id])}}" class="float-start" method="post">
+                                {{-- trash section to be continued --}}
+                                    {{-- <form action="{{route("delete-question", ["id" => $question->id])}}" class="float-start" method="post">
                                         @csrf
                                         <button class="btn btn-danger btn-sm">Trash</button>
+                                    </form> --}}
+                                    <form action="{{route("hard-delete-question", ["id" => $question->id])}}" class="float-start" method="post">
+                                        @csrf
+                                        <button class="btn btn-danger btn-sm">Delete</button>
                                     </form>
                                     <form action="{{route("toggle-visibilty", ["id" => $question->id])}}" action="float-start" method="post">
                                         @csrf
-                                        <button class="btn btn-{{$question->visible?"primary":"success"}} btn-sm">make {{$question->visible?"Hidden":"Visible"}}</button>
+                                        <button class="btn btn-{{$question->visible?"primary":"success"}} btn-sm">{{$question->visible?"Hide":"Show"}}</button>
                                         <input class="form-check-input" name="visible" hidden type="text" value="{{$question->visible?"0":"1"}}" id="question_visible">
                                     </form>
                                 @endif

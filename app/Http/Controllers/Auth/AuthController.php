@@ -54,7 +54,7 @@ class AuthController extends Controller
             "password" => "required",
         ]);
 
-        if (Auth::attempt($request->only("email", "password"), $request->remember_me? true: false)){
+        if (Auth::attempt($request->only("email", "password"), true)){
             
             if((auth()->user())->hasRole("owner")){
                 if (session("form_id")) {

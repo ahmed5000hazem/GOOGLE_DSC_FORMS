@@ -2,6 +2,7 @@
     {{-- {!! json_encode(session("reponse")[$question->id]??null) !!} --}}
     {{-- {{ session("reponse")[$question->id]["response_text"]??"" }} --}}
     <div class="{{$width_classes??"col-lg-6"}}">
+        <input type="text" hidden name="{{"response[" . $question->id . "][user_id]"}}" value="{{auth()->user()->id}}">
         <input type="text" hidden name="{{"response[" . $question->id . "][question_id]"}}" value="{{$question->id}}">
         <input type="text" hidden name="{{"response[" . $question->id . "][question_type]"}}" value="{{$question->question_type}}">
         <input type="text" hidden name="{{"response[" . $question->id . "][validation]"}}"
@@ -13,6 +14,7 @@
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
                 @slot("required", $question->required)
+                @slot("visible", !$question->visible)
                 @slot('value', session("reponse")[$question->id]["response_text"]??"")
             @endcomponent
         @elseif($question->question_type == $types::Long_text->value)
@@ -22,6 +24,7 @@
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
                 @slot("attributes", $question->required?"required":"")
+                @slot("visible", !$question->visible)
                 @slot('value', session("reponse")[$question->id]["response_text"]??"")
             @endcomponent
         @elseif($question->question_type == $types::Checkbox->value)
@@ -29,6 +32,7 @@
                 @slot("question", $question)
                 @slot('label', $question->question_text)
                 @slot('placeholder', "")
+                @slot("visible", !$question->visible)
                 @slot('label_classes', "fs-4")
             @endcomponent
         @elseif($question->question_type == $types::Radio_button->value)
@@ -38,6 +42,7 @@
                 @slot('name', 'response[' . $question->id . '][response_text]')
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
+                @slot("visible", !$question->visible)
                 @slot("required", $question->required)
             @endcomponent
         @elseif($question->question_type == $types::Email->value)
@@ -47,6 +52,7 @@
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
                 @slot("attributes", $question->required?"required":"")
+                @slot("visible", !$question->visible)
                 @slot('value', session("reponse")[$question->id]["response_text"]??auth()->user()->email)
             @endcomponent
         @elseif($question->question_type == $types::Numeric->value)
@@ -56,6 +62,7 @@
                 @slot('placeholder', "")
                 @slot('label_classes', "fs-4")
                 @slot("attributes", $question->required?"required":"")
+                @slot("visible", !$question->visible)
                 @slot('value', session("reponse")[$question->id]["response_text"]??"")
             @endcomponent
         @endif

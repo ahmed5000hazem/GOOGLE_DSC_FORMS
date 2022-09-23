@@ -8,7 +8,7 @@ use App\Models\Option;
 class Response extends Model
 {
     use HasFactory;
-    public $fillable = ["question_id", "response_text"];
+    public $fillable = ["question_id", "response_text", "submission_id"];
 
     public function options()
     {

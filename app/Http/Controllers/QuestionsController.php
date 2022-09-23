@@ -73,53 +73,56 @@ class QuestionsController extends Controller
     public function update_questions($id, Request $request)
     {
         $this->DesignFormBussinessLogic->validate_updated_questions($request);
-        try {
-            $this->DesignFormBussinessLogic->update_question_data($id, $request);
+        
+        $this->DesignFormBussinessLogic->update_question_data($id, $request);   
+        
+        // try {
+        //     $this->DesignFormBussinessLogic->update_question_data($id, $request);
             
-            return redirect()->route("design-form", ["id"=>$request->question["form_id"]]);
-        } catch (\Throwable $th) {
-            return redirect()->route("dashboard")->with("errors", "invalid question format");
-        }
+        //     return redirect()->route("design-form", ["id"=>$request->question["form_id"]]);
+        // } catch (\Throwable $th) {
+        //     return redirect()->route("dashboard")->with("errors", "invalid question format");
+        // }
     }
 
     public function toggle_visibilty($id, Request $request)
     {
         $question = Question::findOrFail($id);
-        $question->update(["visible" => $request->visible]);
+        $question->update(["visible" => $request->visible, "required" => false]);
         return redirect()->back();
     }
-
-    public function restore_questions($id)
-    {
-        $question = Question::withTrashed()->findOrFail($id);
-        $question->restore();
-        return redirect()->back();
-    }
+    // ======= trash section to be continued
+    // public function restore_questions($id)
+    // {
+    //     $question = Question::withTrashed()->findOrFail($id);
+    //     $question->restore();
+    //     return redirect()->back();
+    // }
     
-    public function trash_all($id)
-    {
-        Question::where("form_id", $id)->delete();
-        return redirect()->back();
-    }
+    // public function trash_all($id)
+    // {
+    //     Question::where("form_id", $id)->delete();
+    //     return redirect()->back();
+    // }
     
-    public function restore_all_questions($id)
-    {
-        $question = Question::withTrashed()->where("form_id", $id);
-        $question->restore();
-        return redirect()->route("design-form", ["id" => $id]);
-    }
+    // public function restore_all_questions($id)
+    // {
+    //     $question = Question::withTrashed()->where("form_id", $id);
+    //     $question->restore();
+    //     return redirect()->route("design-form", ["id" => $id]);
+    // }
+    // public function delete_questions($id)
+    // {
+    //     $question = Question::findOrFail($id);
+    //     $question->delete();
+    //     return redirect()->back();
+    // }
 
     public function hard_delete_questions($id)
     {
         $question = Question::withTrashed()->findOrFail($id);
         $question->options()->delete();
         $question->forceDelete();
-        return redirect()->back();
-    }
-    public function delete_questions($id)
-    {
-        $question = Question::findOrFail($id);
-        $question->delete();
         return redirect()->back();
     }
 }
