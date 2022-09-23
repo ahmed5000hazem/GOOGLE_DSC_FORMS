@@ -212,6 +212,7 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         'Entrust' => Mindscms\Entrust\EntrustFacade::class,
+        "Excel" => Spatie\SimpleExcel\SimpleExcelReader::class,
     ])->toArray(),
 
 ];

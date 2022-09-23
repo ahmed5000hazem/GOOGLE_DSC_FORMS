@@ -65,4 +65,10 @@ class ResponseBussinessLogic
 
     }
 
+    public function getResponses($questions_ids)
+    {
+        $responses = Response::whereIn("question_id", $questions_ids->all())->with("options")->paginate(25);
+        $responses_collection = $responses->sortBy("question_id")->groupBy("user_id");
+        return $responses_collection;
+    }
 }
