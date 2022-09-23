@@ -73,13 +73,16 @@ class QuestionsController extends Controller
     public function update_questions($id, Request $request)
     {
         $this->DesignFormBussinessLogic->validate_updated_questions($request);
-        try {
-            $this->DesignFormBussinessLogic->update_question_data($id, $request);
+        
+        $this->DesignFormBussinessLogic->update_question_data($id, $request);   
+        
+        // try {
+        //     $this->DesignFormBussinessLogic->update_question_data($id, $request);
             
-            return redirect()->route("design-form", ["id"=>$request->question["form_id"]]);
-        } catch (\Throwable $th) {
-            return redirect()->route("dashboard")->with("errors", "invalid question format");
-        }
+        //     return redirect()->route("design-form", ["id"=>$request->question["form_id"]]);
+        // } catch (\Throwable $th) {
+        //     return redirect()->route("dashboard")->with("errors", "invalid question format");
+        // }
     }
 
     public function toggle_visibilty($id, Request $request)
