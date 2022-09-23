@@ -7,7 +7,7 @@
             <h4 class="fs-5"> Questions <span class="badge bg-primary">{{count($questions)}}</span></h4>
         </div>
         <div class="col-auto">
-            <h4 class="fs-5"> Responses <span class="badge text-dark bg-info">{{count($responses_collection)}}</span></h4>
+            <h4 class="fs-5"> Responses <span class="badge text-dark bg-info">{{count($submissions)}}</span></h4>
         </div>
         <div class="col-auto">
             <a href="{{route("export-excel-response", ["id" => $form->id])}}" class="btn btn-primary">Export as Excel</a>
@@ -21,40 +21,36 @@
                     @foreach ($questions as $question)
                         <th>{{$question->question_text}}</th>
                     @endforeach
+                    <th>at</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($responses_collection as $responses)
+                @foreach ($submissions as $submission)
+                <tr>
                     @for ($i = 0; $i < count($questions); $i++)
-                        @if ($responses->where("question_id", $questions[$i]->id)->isNotEmpty())
-                            @php $response = (($responses->where("question_id", $questions[$i]->id))->first()); @endphp
-                            @if ($response->response_text == null && $response->options)
-                            <td>
-                                @foreach ($response->options as $option)
-                                    <span class=" text-{{$colors[$loop->index % 4]}} @if(count($response->options) >= 3)d-block @endif">{{$option->option_text}}</span>
-                                @endforeach
-                            </td>
-                            @else
-                            <td> {{$response->response_text}} </td>
-                            @endif
-                        @else
-                            <td class="text-warning fw-bold" title="no data because the question doesnot have any responses in database so cant render it's response">No Data</td>
-                        @endif
-                    @endfor
-                    {{-- @foreach ($responses as $item)
-                        @if ($item->response_text == null && $item->options)
+                    @if ($submission->responses->where("question_id", $questions[$i]->id)->isNotEmpty())
+                    @php $response = (($submission->responses->where("question_id", $questions[$i]->id))->first()); @endphp
+                    @if ($response->response_text == null && $response->options)
                         <td>
-                            @foreach ($item->options as $option)
-                                <span class=" text-{{$colors[$loop->index % 4]}} @if(count($item->options) >= 3)d-block @endif">{{$option->option_text}}</span>
+                            @foreach ($response->options as $option)
+                                <span class=" text-{{$colors[$loop->index % 4]}} @if(count($response->options) >= 3)d-block @endif">{{$option->option_text}}</span>
                             @endforeach
                         </td>
                         @else
-                        <td> {{$item->response_text}} </td>
+                        <td> {{$response->response_text}} </td>
                         @endif
-                    @endforeach --}}
+                    @else
+                    <td class="text-warning fw-bold" title="no data because the question doesnot have any responses in database so cant render it's response">No Data</td>
+                    @endif
+                    @endfor
+                    <td>
+                        {{$submission->created_at}}
+                    </td>
+                </tr>
                 @endforeach
             </tbody>
         </table>
     </div>
+    {{ $submissions->links("vendor.pagination.bootstrap-5") }}
 </div>
 @endsection

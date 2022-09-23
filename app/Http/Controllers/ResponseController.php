@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Form;
 use App\Models\Response;
 use App\Models\Question;
+use App\Models\Submission;
 use Illuminate\Http\Request;
 use App\Modules\Kernel\BussinessLogic\ResponseBussinessLogic;
 
@@ -21,12 +22,8 @@ class ResponseController extends Controller
     {
         $form = Form::where("id", $id)->first();
         $questions = Question::where("form_id", $form->id)->orderBy("id")->withTrashed()->get();
-        $questions_ids = $questions->map(function ($item) {
-            return $item->id;
-        });
-
-        $responses_collection = $this->responseBussinessLogic->getResponses($questions_ids);
-
+        $submissions = Submission::where("form_id", $id)->with("responses")->paginate(25);
+        date_default_timezone_set('Africa/Cairo');
         $colors = [
             "success",
             "danger",
@@ -34,7 +31,7 @@ class ResponseController extends Controller
             "warning",
         ];
 
-        return view("get-responses", compact("form", "responses_collection", "questions", "colors"));
+        return view("get-responses", compact("form", "submissions", "questions", "colors"));
     }
 
     public function save_response(Request $request, $id)

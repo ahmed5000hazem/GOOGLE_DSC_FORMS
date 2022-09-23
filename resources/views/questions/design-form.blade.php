@@ -43,7 +43,7 @@
                 <a href="{{route("get-responses", ["id" => $form->id])}}" class="btn btn-info">Responses</a>
             </div>
             <div class="col-4 col-lg-2">
-                <a href="{{route("get_form", ["id" => $form->id])}}" class="btn btn-success">Preview</a>
+                <a href="{{route("get_form", ["id" => $form->id])}}" target="_blank" class="btn btn-success">Preview</a>
             </div>
             
         @endif
