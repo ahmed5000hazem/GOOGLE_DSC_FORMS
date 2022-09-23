@@ -2,12 +2,15 @@
 @section("content")
 <div class="container">
     <h2 class="text-center mt-4">Reponses of <a href="{{route("design-form", ["id" => $form->id])}}">{{$form->name}}</a> form</h2>
-    <div class="row options">
+    <div class="row options my-4 align-items-center">
         <div class="col-auto">
             <h4 class="fs-5"> Questions <span class="badge bg-primary">{{count($questions)}}</span></h4>
         </div>
         <div class="col-auto">
             <h4 class="fs-5"> Responses <span class="badge text-dark bg-info">{{count($responses_collection)}}</span></h4>
+        </div>
+        <div class="col-auto">
+            <a href="{{route("export-excel-response", ["id" => $form->id])}}" class="btn btn-primary">Export as Excel</a>
         </div>
         
     </div>

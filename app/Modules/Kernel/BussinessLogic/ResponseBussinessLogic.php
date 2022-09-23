@@ -2,10 +2,14 @@
 namespace App\Modules\Kernel\BussinessLogic;
 
 use App\Models\Form;
+use App\Models\Question;
 use App\Models\Response;
 use App\Modules\EnumManager\QuestionEnum;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+
+use Spatie\SimpleExcel\SimpleExcelReader as ExcelReader;
+use Spatie\SimpleExcel\SimpleExcelWriter as ExcelWriter;
 
 class ResponseBussinessLogic
 {    
@@ -70,5 +74,45 @@ class ResponseBussinessLogic
         $responses = Response::whereIn("question_id", $questions_ids->all())->with("options")->paginate(25);
         $responses_collection = $responses->sortBy("question_id")->groupBy("user_id");
         return $responses_collection;
+    }
+
+    public function prepareResponsesToExcel($form_id)
+    {
+        $questions = Question::where("form_id", $form_id)->orderBy("id")->withTrashed()->get();
+        $questions_ids = $questions->map(function ($item) {
+            return $item->id;
+        });
+
+        $responses = Response::whereIn("question_id", $questions_ids->all())->get();
+        $responses = $responses->sortBy("question_id")->groupBy("user_id");
+
+        $responses_collection = collect([]);
+        foreach ($responses as $user_responses) {
+            $response_collection = collect([]);
+            for ($i = 0; $i < count($questions); $i++){
+                if ($user_responses->where("question_id", $questions[$i]->id)->isNotEmpty()) {
+                    $response = (($user_responses->where("question_id", $questions[$i]->id))->first());
+                    if ($response->response_text === null && $response->options){
+                        $options_text = "";
+                        foreach ($response->options as $option){
+                            $options_text.=$option->option_text . "|";
+                        }
+                        $response_collection->put(trim($questions[$i]->question_text), $options_text);
+                    }else {
+                        $response_collection->put(trim($questions[$i]->question_text), $response->response_text);
+                    }
+                } else {
+                    $response_collection->put(trim($questions[$i]->question_text), "");
+                }
+            }
+            $responses_collection->push($response_collection->all());
+        }
+        return $responses_collection;
+    }
+
+    function createExcel($formated_excel_response)
+    {
+        $excel = ExcelWriter::streamDownload(public_path('responses.xlsx'), "xlsx");
+        $excel->addRows($formated_excel_response);
     }
 }

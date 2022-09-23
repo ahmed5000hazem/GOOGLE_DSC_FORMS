@@ -54,4 +54,10 @@ class ResponseController extends Controller
             return view("get-form-error", ["message" => "Something went wrong please try again."]);
         }
     }
+
+    public function export_excel_response($id)
+    {
+        $responses = $this->responseBussinessLogic->prepareResponsesToExcel($id);
+        $this->responseBussinessLogic->createExcel($responses);
+    }
 }
