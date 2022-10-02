@@ -8,6 +8,7 @@ use App\Models\Question;
 use App\Models\Response;
 use App\Modules\EnumManager\QuestionEnum;
 use App\Modules\Kernel\BussinessLogic\ResponseBussinessLogic;
+use App\Scopes\UserFormScope;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -59,7 +60,7 @@ class FormController extends Controller
         if ($validity["error"]??false) 
             return view("get-form-error", $validity);
 
-        $form = Form::findOrFail($id);
+        $form = Form::withoutGlobalScope(UserFormScope::class)->findOrFail($id);
         $colors = [
             "success",
             "danger",

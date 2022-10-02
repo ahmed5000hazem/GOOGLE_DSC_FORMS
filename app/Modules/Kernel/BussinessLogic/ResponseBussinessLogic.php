@@ -6,6 +6,7 @@ use App\Models\Question;
 use App\Models\Response;
 use App\Models\Submission;
 use App\Modules\EnumManager\QuestionEnum;
+use App\Scopes\UserFormScope;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -68,7 +69,7 @@ class ResponseBussinessLogic
         $response = Submission::select("user_id")->where("user_id", auth()->user()->id)->where("form_id", $form_id)->get();
         if ($response->isNotEmpty()) return ["error" => true, "message" => "You have submited your response"];
 
-        $form = Form::findOrFail($form_id);
+        $form = Form::withoutGlobalScope(UserFormScope::class)->findOrFail($form_id);
         if (($form->expires_at && strtotime($form->expires_at) < time())) return ["error" => true, "message" => "Form Expired."];
     }
 
