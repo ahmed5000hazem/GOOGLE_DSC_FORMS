@@ -68,9 +68,18 @@ class FormController extends Controller
             "warning",
         ];
         $question_types = QuestionEnum::class;
-        $questions = Question::where("form_id", $id)->with("options")->orderBy("order");
+        $questions = Question::where("form_id", $id)->with("options")->orderBy("order")->get();
+
+        $hidden_questions = $questions->where("visible", 0);
+        // dd(count($hidden_questions));
         session(["form_id" => $form->id]);
-        return view("make-response", ["form" => $form, "questions" => $questions->get(), "colors" => $colors, "types" => $question_types]);
+        return view("make-response", [
+            "form" => $form,
+            "questions" => $questions,
+            "hidden_questions" => $hidden_questions,
+            "colors" => $colors,
+            "types" => $question_types
+        ]);
     }
 
     public function delete($id)
