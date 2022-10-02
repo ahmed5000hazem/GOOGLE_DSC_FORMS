@@ -121,6 +121,7 @@ class QuestionsController extends Controller
     public function hard_delete_questions($id)
     {
         $question = Question::withTrashed()->findOrFail($id);
+        $question->responses()->delete();
         $question->options()->delete();
         $question->forceDelete();
         return redirect()->back();

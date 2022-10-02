@@ -10,7 +10,7 @@
                 <p class="fs-4"> {{$form->expires_at?"available untill ".$form->expires_at : "available forever"}} </p>
             </div>
             <div class="col-lg-3">
-                <p class="fs-4">Questions: {{count($questions)}}</p>
+                <p class="fs-4">Questions: {{count($questions) - count($hidden_questions)}}</p>
             </div>
         @endif
     </div>

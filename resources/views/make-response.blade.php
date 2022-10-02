@@ -5,6 +5,7 @@
     @component('components.make-responses.header')
         @slot('form', $form)
         @slot('questions', $questions)
+        @slot('hidden_questions', $hidden_questions)
     @endcomponent
     @if (!($form->expires_at && strtotime($form->expires_at) < time()))
     <form action="{{route("save-response", ["id" => $form->id])}}" method="post">
