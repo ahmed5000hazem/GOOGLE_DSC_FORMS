@@ -1,11 +1,22 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    <h2 class="text-center my-4">edit form</h2>
-    <div class="options">
-        <a href="{{route("design-form", ["id"=>$form->id])}}" class="btn btn-primary">Design Form</a>
+    <div class="row options my-3">
+        <div class="col-4 col-lg-2">
+            <a href="{{route("design-form", ["id"=>$form->id])}}" class="btn btn-primary">Design Form</a>
+        </div>
+        <div class="col-4 col-lg-2">
+            <a href="{{route("get-responses", ["id" => $form->id])}}" class="btn btn-info">Responses</a>
+        </div>
+        <div class="col-4 col-lg-2">
+            <a href="{{route("get_form", ["id" => $form->id])}}" target="_blank" class="btn btn-success">Preview</a>
+        </div>
     </div>
-    <form action="{{route('forms.update', ['id' => $form->id])}}" method="post">
+    <hr>
+</div>
+<div class="container">
+    <h2 class="text-center">edit form</h2>
+    <form class="mt-5" action="{{route('forms.update', ['id' => $form->id])}}" method="post">
         @csrf
         <div class="row justify-content-center">
             <div class="col-8 col-lg-4">
@@ -20,6 +31,55 @@
                 @slot('name', 'expires_at')
                 @slot("date", $form->expires_at)
                 @endcomponent
+                
+                <div class="auth-option my-3">
+                    @component('components.dynamic-form.radio')
+                    @slot('name', "auth")
+                    @slot('id', "required_auth")
+                    @if ($form->auth)
+                        @slot('attributes', 'checked')
+                    @endif
+                    @slot('labelClasses', 'text-primary')
+                    @slot('value', "1")
+                    @slot('label', "required auth")
+                    @endcomponent
+                    
+                    @component('components.dynamic-form.radio')
+                    @slot('name', 'auth')
+                    @slot('id', "optional_auth")
+                    @if (!$form->auth)
+                        @slot('attributes', 'checked')
+                    @endif
+                    @slot('labelClasses', 'text-danger')
+                    @slot('value', "0")
+                    @slot('label', 'optional auth')
+                    @endcomponent
+                </div>
+
+                <div class="auth-option my-3">
+                    @component('components.dynamic-form.radio')
+                    @slot('name', 'multi_submit')
+                    @slot('id', "single_submit")
+                    @slot('labelClasses', 'text-primary')
+                    @slot('attributes', 'checked')
+                    @if (!$form->multi_submit)
+                        @slot('attributes', 'checked')
+                    @endif
+                    @slot('value', "0")
+                    @slot('label', 'single submit')
+                    @endcomponent
+                    
+                    @component('components.dynamic-form.radio')
+                    @slot('name', "multi_submit")
+                    @slot('id', "multi_submit")
+                    @if ($form->multi_submit)
+                        @slot('attributes', 'checked')
+                    @endif
+                    @slot('labelClasses', 'text-primary')
+                    @slot('value', "1")
+                    @slot('label', "multi submit")
+                    @endcomponent
+                </div>
 
                 @component('components.dynamic-form.text-area')
                     @slot('label', 'Edit form description')
