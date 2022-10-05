@@ -2,7 +2,7 @@
     {{-- {!! json_encode(session("reponse")[$question->id]??null) !!} --}}
     {{-- {{ session("reponse")[$question->id]["response_text"]??"" }} --}}
     <div class="{{$width_classes??"col-lg-6"}}">
-        <input type="text" hidden name="{{"response[" . $question->id . "][user_id]"}}" value="{{auth()->user()->id}}">
+        <input type="text" hidden name="{{"response[" . $question->id . "][user_id]"}}" value="{{(auth()->user()->id)??0}}">
         <input type="text" hidden name="{{"response[" . $question->id . "][question_id]"}}" value="{{$question->id}}">
         <input type="text" hidden name="{{"response[" . $question->id . "][question_type]"}}" value="{{$question->question_type}}">
         <input type="text" hidden name="{{"response[" . $question->id . "][validation]"}}"
@@ -53,7 +53,7 @@
                 @slot('label_classes', "fs-4")
                 @slot("attributes", $question->required?"required":"")
                 @slot("visible", !$question->visible)
-                @slot('value', session("reponse")[$question->id]["response_text"]??auth()->user()->email)
+                @slot('value', session("reponse")[$question->id]["response_text"]??(auth()->user()->email)??"")
             @endcomponent
         @elseif($question->question_type == $types::Numeric->value)
             @component('components.dynamic-form.number')
