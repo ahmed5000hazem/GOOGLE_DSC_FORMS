@@ -28,7 +28,6 @@ class ResponseBussinessLogic
                 continue;
             }
             $validator = Validator::make($response, [
-                "user_id" => "required",
                 "question_type" => "required",
                 "question_id" => "required",
                 "response_text" => "".$response["validation"],
@@ -46,7 +45,8 @@ class ResponseBussinessLogic
         $responses = $request->response;
         DB::transaction(function () use($responses, $request, $form_id) {
             $user = auth()->user();
-            $submission = Submission::create(["user_id" => $user->id, "form_id" => $form_id]);
+            $submission = Submission::create(["form_id" => $form_id]);
+            $submission->update(["user_id" => ($user->id)??null]);
             foreach ($responses as $key => $response) {
                 $value = collect($response)
                     ->forget(["question_type", "validation"])
@@ -65,48 +65,56 @@ class ResponseBussinessLogic
         });
     }
 
-    public function check_form_availability($form_id)
+    public function format_availability_error($message, $action)
     {
+        $errors["error"] = true;
+        $errors["message"] = $message;
+        $errors["action"] = $action;
+        return $errors;
+    }
 
+    public function login_availability_error()
+    {
+        $errors = $this->format_availability_error("", "login");
+        return $errors;
+    }
+
+    public function format_availability_error_free()
+    {
         $errors["error"] = false;
         $errors["message"] = "";
         $errors["action"] = "0";
+        return $errors;
+    }
+
+    public function check_form_availability($form_id)
+    {
 
         $form = Form::withoutGlobalScope(UserFormScope::class)->findOrFail($form_id);
 
-        if ($form->auth) {
-            if (!Auth::check()){
-                $errors["error"] = true;
-                $errors["message"] = "";
-                $errors["action"] = "login";
-                return $errors;
-            }
+        if ($form->auth &&!Auth::check()){
+            return $this->login_availability_error();
         }
         
-        if (!$form->multi_submit) {
-            if (!Auth::check()) {
-                $errors["error"] = true;
-                $errors["message"] = "";
-                $errors["action"] = "login";
-                return $errors;
+        if ($form->multi_submit) {
+            if ($form->auth && !Auth::check()) {
+                return $this->login_availability_error();
             }
+        } else {
+            if (!Auth::check()){
+                return $this->login_availability_error();
+            }   
             $response = Submission::select("user_id")->where("user_id", auth()->user()->id)->where("form_id", $form_id)->get();
             if ($response->isNotEmpty()) {
-                $errors["error"] = true;
-                $errors["message"] = "You have submited your response.";
-                $errors["action"] = "error-view";
-                return $errors;
+                return $this->format_availability_error("you have submited your response.", "error-view");
             }
         }
         
         if (($form->expires_at && strtotime($form->expires_at) < time())) {
-            $errors["error"] = true;
-            $errors["message"] = "Form Expired.";
-            $errors["action"] = "error-view";
-            return $errors;
+            return $this->format_availability_error("Form Expired.", "error-view");
         }
 
-        return $errors;
+        return $this->format_availability_error_free();
     }
 
     public function getResponses($responses)

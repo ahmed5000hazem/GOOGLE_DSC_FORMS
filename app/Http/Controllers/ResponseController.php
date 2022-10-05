@@ -46,11 +46,11 @@ class ResponseController extends Controller
 
         $err = $this->responseBussinessLogic->validateResponse($request, $id);
         if ($err) return redirect()->route("get_form", ["id" => $id])->with("reponse", $request->response);
+        
         try {
             $this->responseBussinessLogic->saveResponse($request, $id);
             $validity["message"] = "You have submited your response.";
             return redirect()->route("get-form-message");
-            // return redirect()->route("get_form", ["id" => $id]);
         } catch (\Throwable $th) {
             return view("get-form-error", ["message" => "Something went wrong please try again."]);
         }
