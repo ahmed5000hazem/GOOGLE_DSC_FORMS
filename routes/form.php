@@ -21,4 +21,4 @@ Route::middleware("auth", "role:owner")->group(function () {
     Route::get('{id}/add-questions', [QuestionsController::class, "add_questions"])->name("add-questions");
 });
 
-Route::get("{id}", [FormController::class, "get_form"])->name("get_form");
+Route::middleware("auth")->get("{id}", [FormController::class, "get_form"])->name("get_form");

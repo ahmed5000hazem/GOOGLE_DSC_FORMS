@@ -1,4 +1,4 @@
-@if (isset($question->options))
+@if ($question->options)
     @if ($visible??false)
         <div class="d-none">
             <h4>{{$question->question_text}} @if ($question->required) <span class="text-danger ms-1" style="font-size: 13px"> * Required</span> @endif </h4>
@@ -25,9 +25,9 @@
     </div>
     @endif
 @else
-    <div class="form-check form-check-inline">
+    <div class="form-check">
         <h4>{{$question->question_text??""}}</h4>
-        <input class="form-check-input" {{$attributes??""}} type="radio" name="{{$name??""}}" value="{{$value??''}}" id="{{$id??$name}}">
-        <label class="form-check-label {{$labelClasses??''}}"  for="{{$id??$name}}">{{$label??""}}</label>
+        <input class="form-check-input" type="radio" name="{{$name??""}}" value="" id="{{$id??$name}}">
+        <label class="form-check-label" for="{{$id??$name}}">{{$label??""}}</label>
     </div>
 @endif

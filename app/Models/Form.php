@@ -11,7 +11,7 @@ use App\Scopes\UserFormScope;
 class Form extends Model
 {
     use HasFactory;
-    protected $fillable = ["name", "owner_id", "description", "expires_at", "auth", "multi_submit"];
+    protected $fillable = ["name", "owner_id", "description", "expires_at"];
 
     public function questions()
     {

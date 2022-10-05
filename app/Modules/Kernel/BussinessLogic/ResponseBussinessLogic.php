@@ -8,7 +8,6 @@ use App\Models\Submission;
 use App\Modules\EnumManager\QuestionEnum;
 use App\Scopes\UserFormScope;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
@@ -67,46 +66,11 @@ class ResponseBussinessLogic
 
     public function check_form_availability($form_id)
     {
-
-        $errors["error"] = false;
-        $errors["message"] = "";
-        $errors["action"] = "0";
+        $response = Submission::select("user_id")->where("user_id", auth()->user()->id)->where("form_id", $form_id)->get();
+        if ($response->isNotEmpty()) return ["error" => true, "message" => "You have submited your response"];
 
         $form = Form::withoutGlobalScope(UserFormScope::class)->findOrFail($form_id);
-
-        if ($form->auth) {
-            if (!Auth::check()){
-                $errors["error"] = true;
-                $errors["message"] = "";
-                $errors["action"] = "login";
-                return $errors;
-            }
-        }
-        
-        if (!$form->multi_submit) {
-            if (!Auth::check()) {
-                $errors["error"] = true;
-                $errors["message"] = "";
-                $errors["action"] = "login";
-                return $errors;
-            }
-            $response = Submission::select("user_id")->where("user_id", auth()->user()->id)->where("form_id", $form_id)->get();
-            if ($response->isNotEmpty()) {
-                $errors["error"] = true;
-                $errors["message"] = "You have submited your response.";
-                $errors["action"] = "error-view";
-                return $errors;
-            }
-        }
-        
-        if (($form->expires_at && strtotime($form->expires_at) < time())) {
-            $errors["error"] = true;
-            $errors["message"] = "Form Expired.";
-            $errors["action"] = "error-view";
-            return $errors;
-        }
-
-        return $errors;
+        if (($form->expires_at && strtotime($form->expires_at) < time())) return ["error" => true, "message" => "Form Expired."];
     }
 
     public function getResponses($responses)

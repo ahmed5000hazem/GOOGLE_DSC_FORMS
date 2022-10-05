@@ -10,7 +10,6 @@ use App\Modules\EnumManager\QuestionEnum;
 use App\Modules\Kernel\BussinessLogic\ResponseBussinessLogic;
 use App\Scopes\UserFormScope;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class FormController extends Controller
@@ -33,14 +32,12 @@ class FormController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate(["name" => "required", "auth" => "required", "multi_submit" => "required"]);
+        $request->validate(["name" => "required"]);
 
         Form::create([
             "name" => $request->name,
             "description" => $request->description,
             "expires_at" => $request->expires_at,
-            "auth" => $request->auth,
-            "multi_submit" => $request->multi_submit,
             "owner_id" => auth()->user()->id,
         ]);
 
@@ -48,10 +45,10 @@ class FormController extends Controller
     }
     public function update(Request $request, $id)
     {
-        $request->validate(["name" => "required", "auth" => "required", "multi_submit" => "required"]);
+        $request->validate(["name" => "required"]);
 
         $form = Form::findOrFail($id);
-        $form->update($request->only("name", "expires_at", "description", "auth", "multi_submit"));
+        $form->update($request->only("name", "expires_at","description"));
         
         return redirect()->route("dashboard");
     }
@@ -59,10 +56,8 @@ class FormController extends Controller
     public function get_form($id)
     {
         $validity = $this->responseBussinessLogic->check_form_availability($id);
-        
-        if ($validity["error"] && $validity["action"] == "login") {
-            return redirect()->route("login");
-        } elseif ($validity["error"] && $validity["action"] != "0")
+
+        if ($validity["error"]??false) 
             return view("get-form-error", $validity);
 
         $form = Form::withoutGlobalScope(UserFormScope::class)->findOrFail($id);
@@ -76,6 +71,7 @@ class FormController extends Controller
         $questions = Question::where("form_id", $id)->with("options")->orderBy("order")->get();
 
         $hidden_questions = $questions->where("visible", 0);
+        // dd(count($hidden_questions));
         session(["form_id" => $form->id]);
         return view("make-response", [
             "form" => $form,

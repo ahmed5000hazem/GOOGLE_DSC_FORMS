@@ -38,9 +38,7 @@ class ResponseController extends Controller
     {
         $validity = $this->responseBussinessLogic->check_form_availability($id);
 
-        if ($validity["error"] && $validity["action"] == "login") {
-            return redirect()->route("login");
-        } elseif ($validity["error"] && $validity["action"] != "0")
+        if ($validity["error"] ?? false)
             return view("get-form-error", $validity);
 
 
@@ -48,9 +46,7 @@ class ResponseController extends Controller
         if ($err) return redirect()->route("get_form", ["id" => $id])->with("reponse", $request->response);
         try {
             $this->responseBussinessLogic->saveResponse($request, $id);
-            $validity["message"] = "You have submited your response.";
-            return redirect()->route("get-form-message");
-            // return redirect()->route("get_form", ["id" => $id]);
+            return redirect()->route("get_form", ["id" => $id]);
         } catch (\Throwable $th) {
             return view("get-form-error", ["message" => "Something went wrong please try again."]);
         }
@@ -60,11 +56,5 @@ class ResponseController extends Controller
     {
         $responses = $this->responseBussinessLogic->prepareResponsesToExcel($id);
         $this->responseBussinessLogic->createExcel($responses);
-    }
-
-    public function reponse_status()
-    {
-        $data["message"] = "You have submited your response.";
-        return view("get-form-error", $data);
     }
 }
