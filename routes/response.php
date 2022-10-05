@@ -11,3 +11,4 @@ Route::middleware("auth")->group(function () {
     
     Route::get("export-excel-response/{id}", [ResponseController::class, "export_excel_response"])->name("export-excel-response");
 });
+Route::get("get-form-error", [ResponseController::class, "reponse_status"])->name("get-form-message");
