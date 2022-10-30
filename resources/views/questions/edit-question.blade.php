@@ -29,7 +29,7 @@
         box.onchange = function () {
             var dataParent = this.getAttribute("data-parent")
             var question_group = document.getElementById(dataParent)
-            if (box.value == 2 || box.value == 3) {
+            if (box.value == 2 || box.value == 3 || box.value == 6) {
                 
                 var options = question_group.querySelectorAll(".options .opt")
                 options.forEach(el => {

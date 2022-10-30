@@ -1,4 +1,4 @@
-@if ($question->options)
+@if (isset($question->options))
     @if ($visible??false)
         <div class="d-none">
             <h4>{{$question->question_text}} @if ($question->required) <span class="text-danger ms-1" style="font-size: 13px"> * Required</span> @endif </h4>

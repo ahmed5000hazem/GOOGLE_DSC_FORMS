@@ -65,6 +65,11 @@
                 @slot("visible", !$question->visible)
                 @slot('value', session("reponse")[$question->id]["response_text"]??"")
             @endcomponent
+        @elseif($question->question_type == $types::Select_box->value)
+            
+            @component('components.dynamic-form.select')
+                @slot('question', $question)
+            @endcomponent
         @endif
     </div>
 </div>
