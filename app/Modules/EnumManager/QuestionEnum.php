@@ -9,4 +9,5 @@ enum QuestionEnum:int {
     case Radio_button = 3;
     case Email = 4;
     case Numeric = 5;
+    case Select_box = 6;
 }

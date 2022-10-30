@@ -37,8 +37,7 @@
             </div>
         </div>
     </div>
-    
-    <div class="question-input-options {{!($question->options == [])? "d-none" : ""}}">
+    <div class="question-input-options {{count($question->options) == 0? 'd-none':''}}">
         <h3 class="mt-3 text-center text-muted" style="font-size:14px">options</h3>
         <div class="options d-flex flex-wrap">
             <div class="col-3 d-none main-opt">

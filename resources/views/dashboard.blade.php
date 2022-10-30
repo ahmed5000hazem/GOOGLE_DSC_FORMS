@@ -2,7 +2,7 @@
 @section("content")
     <div class="container">
         <div class="row mt-5">
-            <div class="col-4 col-md-2 ">
+            <div class="col-6 col-md-2 mb-3">
                 @component("components.form-widget")
                 @slot("title", 'Create a Blank Form')
                 @slot("href", route("forms.create"))
@@ -12,7 +12,7 @@
                 @endcomponent
             </div>
             @foreach ($forms as $form)
-                <div class="col-4 col-md-2 ">
+                <div class="col-6 col-md-2 mb-3">
                     @component("components.form-widget")
                         @slot("title", $form->description)
                         @slot("href", route("forms.edit", ["id" => $form->id] ))
