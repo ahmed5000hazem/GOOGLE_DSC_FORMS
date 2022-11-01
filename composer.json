@@ -7,11 +7,13 @@
     "require": {
         "php": "^8.0.2",
         "doctrine/dbal": "^3.4",
+        "eduardokum/laravel-mail-auto-embed": "^2.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "mindscms/entrust": "^2.5",
+        "simplesoftwareio/simple-qrcode": "^4.2",
         "spatie/simple-excel": "^2.2"
     },
     "require-dev": {

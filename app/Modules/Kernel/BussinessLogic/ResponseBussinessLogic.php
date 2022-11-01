@@ -7,7 +7,7 @@ use App\Models\Response;
 use App\Models\Submission;
 use App\Modules\EnumManager\QuestionEnum;
 use App\Scopes\UserFormScope;
-use Carbon\Carbon;
+use App\Traits\Responses\MailTrait;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
@@ -16,6 +16,7 @@ use Spatie\SimpleExcel\SimpleExcelWriter as ExcelWriter;
 
 class ResponseBussinessLogic
 {    
+    use MailTrait;
     public function validateResponse($request, $id)
     {
         $responses = $request->response;
@@ -53,6 +54,14 @@ class ResponseBussinessLogic
                     ->put("submission_id", $submission->id)
                     ->all();
                 $form_response = Response::create($value);
+                if ($response["question_type"] == QuestionEnum::Email->value && $response["response_text"]){
+                    $data['recipient'] = $response["response_text"];
+                    $data['subject'] = 'Confirm Submission';
+                    $data['qrData'] = $submission->id;
+                    
+                    // send confirmation mail to user
+                    $this->sendMail($data);
+                }
                 if ($response["question_type"] == QuestionEnum::Checkbox->value) {
                     if (isset($request->options[$key])) {
                         $options = collect($request->options[$key])->map(function ($item) use ($form_response) {

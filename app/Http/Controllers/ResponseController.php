@@ -67,4 +67,10 @@ class ResponseController extends Controller
         $data["message"] = "You have submited your response.";
         return view("get-form-error", $data);
     }
+
+    public function getTicket($submissionId)
+    {
+        $submission = Submission::findOrFail($submissionId);
+        return view('ticket', compact('submission'));
+    }
 }
