@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ResponseController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -16,3 +17,5 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return redirect("/owner");
 });
+
+Route::get('get-ticket/{submissionId}', [ResponseController::class, 'getTicket']);
