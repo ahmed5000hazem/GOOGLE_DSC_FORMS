@@ -1,7 +1,7 @@
 @extends("layouts.form")
 @section("content")
 <div class="container">
-    <h2 class="text-center mt-4">Ticket info {{$submission->created_at}}</h2>
+    <h2 class="text-center mt-4"> <span class="text-primary d-block my-3"> Ticket Info </span> booked at {{$submission->created_at}}</h2>
     <div class="row options my-4 align-items-center">
         <div class="col-auto">
             <h4 class="fs-5"> Questions <span class="badge bg-primary">{{count($submission->form->questions)}}</span></h4>
