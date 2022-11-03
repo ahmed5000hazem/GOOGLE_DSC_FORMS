@@ -46,7 +46,7 @@ class ResponseBussinessLogic
         $responses = $request->response;
         DB::transaction(function () use($responses, $request, $form_id) {
             $user = auth()->user();
-            $submission = Submission::create(["form_id" => $form_id]);
+            $submission = Submission::create(["form_id" => $form_id, 'token' => \Str::random(40)]);
             $submission->update(["user_id" => ($user->id)??null]);
             foreach ($responses as $key => $response) {
                 $value = collect($response)
@@ -57,8 +57,8 @@ class ResponseBussinessLogic
                 if ($response["question_type"] == QuestionEnum::Email->value && $response["response_text"]){
                     $data['recipient'] = $response["response_text"];
                     $data['subject'] = 'Confirm Submission';
-                    $data['qrData'] = $submission->id;
-                    
+                    $data['qrData'] = env('APP_URL', 'gdsc-fu.com').'/get-submission?token='.$submission->token;
+                    $data['submission_id'] = $submission->id;
                     // send confirmation mail to user
                     $this->sendMail($data);
                 }

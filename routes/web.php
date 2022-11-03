@@ -19,3 +19,5 @@ Route::get('/', function () {
 });
 
 Route::get('get-ticket/{submissionId}', [ResponseController::class, 'getTicket']);
+
+Route::get("/get-submission", [ResponseController::class, 'getSubmission']);
