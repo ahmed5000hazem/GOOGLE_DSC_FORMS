@@ -18,6 +18,6 @@ class Submission extends Model
 
     public function form()
     {
-        return $this->belongsTo(Form::class);
+        return $this->belongsTo(Form::class)->withoutGlobalScopes();
     }
 }

@@ -1,8 +1,13 @@
 @extends("layouts.form")
 @section("content")
 <div class="container">
-    <h2 class="text-center my-4">Ticket info</h2>
-    <div class="table-responsive mt-4">
+    <h2 class="text-center mt-4">Ticket info</h2>
+    <div class="row options my-4 align-items-center">
+        <div class="col-auto">
+            <h4 class="fs-5"> Questions <span class="badge bg-primary">{{count($submission->form->questions)}}</span></h4>
+        </div>
+    </div>
+    <div class="table-responsive">
         <table class="table table-dark table-striped table-hover table-bordered text-center">
             <tbody>
                 {{-- @foreach ($submissions as $submission) --}}
