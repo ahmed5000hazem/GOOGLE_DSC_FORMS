@@ -47,8 +47,8 @@ class ResponseController extends Controller
         $err = $this->responseBussinessLogic->validateResponse($request, $id);
         if ($err) return redirect()->route("get_form", ["id" => $id])->with("reponse", $request->response);
         
+        $this->responseBussinessLogic->saveResponse($request, $id);
         try {
-            $this->responseBussinessLogic->saveResponse($request, $id);
             $validity["message"] = "You have submited your response.";
             return redirect()->route("get-form-message");
         } catch (\Throwable $th) {
@@ -72,5 +72,14 @@ class ResponseController extends Controller
     {
         $submission = Submission::findOrFail($submissionId);
         return view('ticket', compact('submission'));
+    }
+
+    public function getSubmission(Request $request)
+    {
+        if (!$request->has('token')){
+            return view('get-form-error', ['message' => 'token is missing']);
+        }
+        $submission = Submission::where('token', $request->query('token'))->with('form.questions', 'responses')->first();
+        return view('ticket-info', compact('submission'));
     }
 }

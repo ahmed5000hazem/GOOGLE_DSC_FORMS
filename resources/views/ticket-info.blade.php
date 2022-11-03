@@ -1,35 +1,21 @@
-@extends("layouts.app")
+@extends("layouts.form")
 @section("content")
 <div class="container">
-    <h2 class="text-center mt-4">Reponses of <a href="{{route("design-form", ["id" => $form->id])}}">{{$form->name}}</a> form</h2>
+    <h2 class="text-center mt-4">Ticket info</h2>
     <div class="row options my-4 align-items-center">
         <div class="col-auto">
-            <h4 class="fs-5"> Questions <span class="badge bg-primary">{{count($questions)}}</span></h4>
+            <h4 class="fs-5"> Questions <span class="badge bg-primary">{{count($submission->form->questions)}}</span></h4>
         </div>
-        <div class="col-auto">
-            <h4 class="fs-5"> Responses <span class="badge text-dark bg-info">{{$submissions->total()}}</span></h4>
-        </div>
-        <div class="col-auto">
-            <a href="{{route("export-excel-response", ["id" => $form->id])}}" class="btn btn-primary">Export as Excel</a>
-        </div>
-        
     </div>
     <div class="table-responsive">
         <table class="table table-dark table-striped table-hover table-bordered text-center">
-            <thead>
-                <tr>
-                    @foreach ($questions as $question)
-                        <th>{{$question->question_text}}</th>
-                    @endforeach
-                    <th>at</th>
-                </tr>
-            </thead>
             <tbody>
-                @foreach ($submissions as $submission)
+                {{-- @foreach ($submissions as $submission) --}}
                 <tr>
-                    @for ($i = 0; $i < count($questions); $i++)
-                    @if ($submission->responses->where("question_id", $questions[$i]->id)->isNotEmpty())
-                    @php $response = (($submission->responses->where("question_id", $questions[$i]->id))->first()); @endphp
+                    @for ($i = 0; $i < count($submission->form->questions); $i++)
+                    <th class="text-info">{{$submission->form->questions[$i]->question_text}}</th>
+                    @if ($submission->responses->where("question_id", $submission->form->questions[$i]->id)->isNotEmpty())
+                    @php $response = (($submission->responses->where("question_id", $submission->form->questions[$i]->id))->first()); @endphp
                     @if ($response->response_text == null && $response->options)
                         <td>
                             @foreach ($response->options as $option)
@@ -47,10 +33,9 @@
                         {{$submission->created_at}}
                     </td>
                 </tr>
-                @endforeach
+                {{-- @endforeach --}}
             </tbody>
         </table>
     </div>
-    {{ $submissions->links("vendor.pagination.bootstrap-5") }}
 </div>
 @endsection
