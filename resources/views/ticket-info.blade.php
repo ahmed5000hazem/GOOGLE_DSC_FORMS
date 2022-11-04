@@ -10,9 +10,8 @@
     <div class="table-responsive">
         <table class="table table-dark table-striped table-hover table-bordered text-center">
             <tbody>
-                {{-- @foreach ($submissions as $submission) --}}
+                @for ($i = 0; $i < count($submission->form->questions); $i++)
                 <tr>
-                    @for ($i = 0; $i < count($submission->form->questions); $i++)
                     <th class="text-info">{{$submission->form->questions[$i]->question_text}}</th>
                     @if ($submission->responses->where("question_id", $submission->form->questions[$i]->id)->isNotEmpty())
                     @php $response = (($submission->responses->where("question_id", $submission->form->questions[$i]->id))->first()); @endphp
@@ -28,9 +27,8 @@
                     @else
                     <td class="text-warning fw-bold" title="no data because the question doesnot have any responses in database so cant render it's response">No Data</td>
                     @endif
-                    @endfor
                 </tr>
-                {{-- @endforeach --}}
+                @endfor
             </tbody>
         </table>
     </div>
