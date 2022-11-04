@@ -10,19 +10,23 @@ use App\Models\Response;
 use App\Modules\EnumManager\QuestionEnum;
 use App\Modules\Kernel\BussinessLogic\ResponseBussinessLogic;
 use App\Scopes\UserFormScope;
+use App\Services\ExcelHandelerService;
 use App\Traits\Forms\FormTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Spatie\SimpleExcel\SimpleExcelReader;
 
 class FormController extends Controller
 {
     use FormTrait;
     public $responseBussinessLogic;
-    public function __construct(ResponseBussinessLogic $responseBussinessLogic)
+    public $excelHandelerService;
+    public function __construct(ResponseBussinessLogic $responseBussinessLogic, ExcelHandelerService $excelHandelerService)
     {
         $this->responseBussinessLogic = $responseBussinessLogic;
+        $this->excelHandelerService = $excelHandelerService;
     }
 
     public function edit($id)
@@ -108,12 +112,15 @@ class FormController extends Controller
         }
         $form = Form::find($id);
         $clean = $this->clearFormData($form);
-
+        $file_name = $id . '.' . $request->form_submissions->extension();
         if ($clean) { // check if clean then store the file
-            $request->form_submissions->storeAs('form_submissions', $id . '.' . $request->form_submissions->extension(), 'public');
+            $request->form_submissions->storeAs('form_submissions', $file_name, 'public');
         }
 
-        CreateFormFromExcel::dispatch($form);
+        // CreateFormFromExcel::dispatch($form, $file_name);
 
+        $path = storage_path('app/public/form_submissions/'.$file_name);
+        $this->createResponsesFromExcelRows($path, $form);
+        return redirect()->route("dashboard");
     }
 }
