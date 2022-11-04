@@ -147,7 +147,7 @@ class ResponseBussinessLogic
                     if ($response->response_text === null && $response->options){
                         $options_text = "";
                         foreach ($response->options as $option){
-                            $options_text.=$option->option_text . "|";
+                            $options_text.=$option->option_text . ",";
                         }
                         $response_collection->put($question, $options_text);
                     }else {
