@@ -9,12 +9,15 @@ use App\Models\Response;
 use App\Modules\EnumManager\QuestionEnum;
 use App\Modules\Kernel\BussinessLogic\ResponseBussinessLogic;
 use App\Scopes\UserFormScope;
+use App\Traits\Forms\FormTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
 
 class FormController extends Controller
 {
+    use FormTrait;
     public $responseBussinessLogic;
     public function __construct(ResponseBussinessLogic $responseBussinessLogic)
     {
@@ -85,20 +88,29 @@ class FormController extends Controller
             "types" => $question_types
         ]);
     }
-
+    // empty_only is truthy falsy value to empty form or delete form itself after make it empty
     public function delete($id)
     {
         $form = Form::where("id", $id)->first();
-        $questions = Question::withTrashed()->get();
-        $questions = $questions->map(function($item){
-            return $item->id;
-        })->all();
-        $responses = Response::whereIn("question_id", $questions);
-        $responsesIds = $responses->get()->map(function($item){ return $item->id; })->all();
-        DB::table("option_response")->whereIn("response_id", $responsesIds)->delete();
-        $responses->delete();
-        Option::whereIn("question_id", $questions)->delete();
+        $this->clearFormData($form);
         $form->delete();
         return redirect()->route("dashboard");
+    }
+    
+    public function importFromExcel($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'form_submissions' => ['required', 'mimes:xls,xlsx']
+        ]);
+        if ($validator->fails()){
+            return redirect()->back();
+        }
+        $form = Form::find($id);
+        $clean = $this->clearFormData($form);
+
+        if ($clean) {
+            
+        }
+
     }
 }

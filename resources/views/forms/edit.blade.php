@@ -12,6 +12,22 @@
             <a href="{{route("get_form", ["id" => $form->id])}}" target="_blank" class="btn btn-success">Preview</a>
         </div>
     </div>
+    <div class="row">
+        <div class="col-4 col-lg-4">
+            <form action="{{route('import-from-excel', ["id" => $form->id])}}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div>
+                    <label for="formFile" class="form-label text-warning bg-dark p-1">import from excel</label>
+                    <input class="form-control" type="file" id="formFile" name="form_submissions">
+                </div>
+                @component('components.dynamic-form.btn')
+                    @slot('btn', 'primary')
+                    @slot('text', 'Upload')
+                    @slot('classes', 'd-block w-100')
+                @endcomponent
+            </form>
+        </div>
+    </div>
     <hr>
 </div>
 <div class="container">
