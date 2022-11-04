@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CreateFormFromExcel;
 use App\Models\Form;
 use App\Models\Option;
 use App\Models\Question;
@@ -108,9 +109,11 @@ class FormController extends Controller
         $form = Form::find($id);
         $clean = $this->clearFormData($form);
 
-        if ($clean) {
-            
+        if ($clean) { // check if clean then store the file
+            $request->form_submissions->storeAs('form_submissions', $id . '.' . $request->form_submissions->extension(), 'public');
         }
+
+        CreateFormFromExcel::dispatch($form);
 
     }
 }
