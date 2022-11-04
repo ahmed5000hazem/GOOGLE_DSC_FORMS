@@ -19,6 +19,8 @@ Route::middleware("auth", "role:owner")->group(function () {
     Route::get('design-form/{id}', [QuestionsController::class, "design_form"])->name("design-form");
     
     Route::get('{id}/add-questions', [QuestionsController::class, "add_questions"])->name("add-questions");
+
+    Route::post('{id}/import-from-excel', [FormController::class, 'importFromExcel'])->name('import-from-excel');
 });
 
 Route::get("{id}", [FormController::class, "get_form"])->name("get_form");

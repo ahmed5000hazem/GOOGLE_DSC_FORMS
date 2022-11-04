@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Jobs\CreateFormFromExcel;
 use App\Models\Form;
 use App\Models\Option;
 use App\Models\Question;
@@ -9,16 +10,23 @@ use App\Models\Response;
 use App\Modules\EnumManager\QuestionEnum;
 use App\Modules\Kernel\BussinessLogic\ResponseBussinessLogic;
 use App\Scopes\UserFormScope;
+use App\Services\ExcelHandelerService;
+use App\Traits\Forms\FormTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Validator;
+use Spatie\SimpleExcel\SimpleExcelReader;
 
 class FormController extends Controller
 {
+    use FormTrait;
     public $responseBussinessLogic;
-    public function __construct(ResponseBussinessLogic $responseBussinessLogic)
+    public $excelHandelerService;
+    public function __construct(ResponseBussinessLogic $responseBussinessLogic, ExcelHandelerService $excelHandelerService)
     {
         $this->responseBussinessLogic = $responseBussinessLogic;
+        $this->excelHandelerService = $excelHandelerService;
     }
 
     public function edit($id)
@@ -85,20 +93,34 @@ class FormController extends Controller
             "types" => $question_types
         ]);
     }
-
+    // empty_only is truthy falsy value to empty form or delete form itself after make it empty
     public function delete($id)
     {
         $form = Form::where("id", $id)->first();
-        $questions = Question::withTrashed()->get();
-        $questions = $questions->map(function($item){
-            return $item->id;
-        })->all();
-        $responses = Response::whereIn("question_id", $questions);
-        $responsesIds = $responses->get()->map(function($item){ return $item->id; })->all();
-        DB::table("option_response")->whereIn("response_id", $responsesIds)->delete();
-        $responses->delete();
-        Option::whereIn("question_id", $questions)->delete();
+        $this->clearFormData($form);
         $form->delete();
+        return redirect()->route("dashboard");
+    }
+    
+    public function importFromExcel($id, Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'form_submissions' => ['required', 'mimes:xls,xlsx']
+        ]);
+        if ($validator->fails()){
+            return redirect()->back();
+        }
+        $form = Form::find($id);
+        $clean = $this->clearFormData($form);
+        $file_name = $id . '.' . $request->form_submissions->extension();
+        if ($clean) { // check if clean then store the file
+            $request->form_submissions->storeAs('form_submissions', $file_name, 'public');
+        }
+
+        // CreateFormFromExcel::dispatch($form, $file_name);
+
+        $path = storage_path('app/public/form_submissions/'.$file_name);
+        $this->createResponsesFromExcelRows($path, $form);
         return redirect()->route("dashboard");
     }
 }
